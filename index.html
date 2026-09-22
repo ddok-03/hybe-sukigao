@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>BOYNEXTDOOR 好き顔6</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Helvetica Neue",
+        Arial,
+        sans-serif;
+
+    background: #f8f5f2;
+    color: #333;
+    text-align: center;
+}
+
+.container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 30px 15px 50px;
+}
+
+h1 {
+    font-size: 30px;
+    margin: 20px 0 10px;
+}
+
+.subtitle {
+    color: #777;
+    margin-bottom: 35px;
+}
+
+button {
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.start-button,
+.retry-button {
+    background: #222;
+    color: white;
+    border-radius: 30px;
+    padding: 15px 35px;
+    font-size: 17px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* 対戦画面 */
+
+.progress {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 15px;
+}
+
+.matchup {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.card {
+    width: 50%;
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    cursor: pointer;
+    transition: transform 0.15s;
+}
+
+.card:active {
+    transform: scale(0.97);
+}
+
+.card img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+}
+
+.info {
+    padding: 13px 8px 16px;
+}
+
+.group {
+    font-size: 11px;
+    color: #999;
+    margin-bottom: 4px;
+}
+
+.name {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* 結果 */
+
+.result-title {
+    margin-top: 20px;
+}
+
+.ranking {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.rank-card {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 15px;
+    padding: 10px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+}
+
+.rank-number {
+    width: 45px;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.rank-card img {
+    width: 75px;
+    height: 95px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.rank-info {
+    text-align: left;
+    padding-left: 15px;
+}
+
+.rank-info .group {
+    margin-bottom: 5px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- スタート画面 -->
+
+    <section id="startScreen">
+
+        <h1>BOYNEXTDOOR<br>好き顔6</h1>
+
+        <p class="subtitle">
+            直感で「好き！」と思う方を選んでね
+        </p>
+
+        <button class="start-button" onclick="startGame()">
+            START
+        </button>
+
+    </section>
+
+
+    <!-- ゲーム画面 -->
+
+    <section id="gameScreen" class="hidden">
+
+        <div class="progress" id="progress"></div>
+
+        <div class="matchup">
+
+            <div class="card" onclick="choose(0)">
+
+                <img id="img0">
+
+                <div class="info">
+                    <div class="group" id="group0"></div>
+                    <div class="name" id="name0"></div>
+                </div>
+
+            </div>
+
+
+            <div class="card" onclick="choose(1)">
+
+                <img id="img1">
+
+                <div class="info">
+                    <div class="group" id="group1"></div>
+                    <div class="name" id="name1"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- 結果画面 -->
+
+    <section id="resultScreen" class="hidden">
+
+        <h1 class="result-title">
+            あなたの好き顔TOP3
+        </h1>
+
+        <div id="ranking" class="ranking"></div>
+
+        <button
+            class="retry-button"
+            onclick="location.reload()"
+            style="margin-top:30px;"
+        >
+            もう一度遊ぶ
+        </button>
+
+    </section>
+
+</div>
+
+
+<script>
+
+const members = [
+
+    {
+        group: "BOYNEXTDOOR",
+        name: "SUNGHO",
+        image: "images/sungho.jpg"
+    },
+
+    {
+        group: "BOYNEXTDOOR",
+        name: "RIWOO",
+        image: "images/riwoo.jpg"
+    },
+
+    {
+        group: "BOYNEXTDOOR",
+        name: "JAEHYUN",
+        image: "images/jaehyun.jpg"
+    },
+
+    {
+        group: "BOYNEXTDOOR",
+        name: "TAESAN",
+        image: "images/taesan.jpg"
+    },
+
+    {
+        group: "BOYNEXTDOOR",
+        name: "LEEHAN",
+        image: "images/leehan.jpg"
+    },
+
+    {
+        group: "BOYNEXTDOOR",
+        name: "WOONHAK",
+        image: "images/woonhak.jpg"
+    }
+
+];
+
+
+let currentStage = [];
+let nextStage = [];
+
+let matchIndex = 0;
+let totalMatches = 0;
+
+let wins = {};
+
+let currentPair = [];
+
+
+/* --------------------------------
+   ゲーム開始
+-------------------------------- */
+
+function startGame() {
+
+    document
+        .getElementById("startScreen")
+        .classList.add("hidden");
+
+    document
+        .getElementById("gameScreen")
+        .classList.remove("hidden");
+
+
+    startPreliminary();
+
+}
+
+
+/* --------------------------------
+   予選
+   6人 → 3人
+   全員2回ずつ程度登場
+-------------------------------- */
+
+function startPreliminary() {
+
+    currentStage = [...members];
+
+    nextStage = [];
+
+    matchIndex = 0;
+
+    totalMatches = 6;
+
+    wins = {};
+
+    members.forEach(member => {
+        wins[member.name] = 0;
+    });
+
+
+    // 対戦カード
+    const pairs = [
+
+        [0, 1],
+        [2, 3],
+        [4, 5],
+
+        [0, 2],
+        [1, 4],
+        [3, 5]
+
+    ];
+
+
+    currentStage = pairs;
+
+    showMatch();
+
+}
+
+
+/* --------------------------------
+   対戦表示
+-------------------------------- */
+
+function showMatch() {
+
+    currentPair =
+        currentStage[matchIndex];
+
+
+    const a =
+        members[currentPair[0]];
+
+    const b =
+        members[currentPair[1]];
+
+
+    document.getElementById("img0").src =
+        a.image;
+
+    document.getElementById("img1").src =
+        b.image;
+
+
+    document.getElementById("group0").textContent =
+        a.group;
+
+    document.getElementById("group1").textContent =
+        b.group;
+
+
+    document.getElementById("name0").textContent =
+        a.name;
+
+    document.getElementById("name1").textContent =
+        b.name;
+
+
+    document.getElementById("progress").textContent =
+        `${matchIndex + 1} / ${totalMatches}`;
+
+}
+
+
+/* --------------------------------
+   選択
+-------------------------------- */
+
+function choose(index) {
+
+    const winnerIndex =
+        currentPair[index];
+
+    wins[members[winnerIndex].name]++;
+
+
+    matchIndex++;
+
+
+    if (matchIndex < totalMatches) {
+
+        showMatch();
+
+    } else {
+
+        finishPreliminary();
+
+    }
+
+}
+
+
+/* --------------------------------
+   予選結果
+-------------------------------- */
+
+function finishPreliminary() {
+
+    const sorted =
+        [...members]
+        .sort((a, b) =>
+            wins[b.name] - wins[a.name]
+        );
+
+
+    const top3 =
+        sorted.slice(0, 3);
+
+
+    startFinal(top3);
+
+}
+
+
+/* --------------------------------
+   TOP3決定戦
+-------------------------------- */
+
+function startFinal(top3) {
+
+    document
+        .getElementById("progress")
+        .textContent = "TOP3決定戦";
+
+
+    currentStage = [
+
+        [top3[0], top3[1]],
+        [top3[0], top3[2]],
+        [top3[1], top3[2]]
+
+    ];
+
+    matchIndex = 0;
+
+    totalMatches = 3;
+
+    showFinalMatch();
+
+}
+
+
+/* --------------------------------
+   TOP3対戦
+-------------------------------- */
+
+function showFinalMatch() {
+
+    currentPair =
+        currentStage[matchIndex];
+
+
+    const a =
+        currentPair[0];
+
+    const b =
+        currentPair[1];
+
+
+    document.getElementById("img0").src =
+        a.image;
+
+    document.getElementById("img1").src =
+        b.image;
+
+
+    document.getElementById("group0").textContent =
+        a.group;
+
+    document.getElementById("group1").textContent =
+        b.group;
+
+
+    document.getElementById("name0").textContent =
+        a.name;
+
+    document.getElementById("name1").textContent =
+        b.name;
+
+
+    document.getElementById("progress").textContent =
+        `${matchIndex + 1} / ${totalMatches}`;
+}
+
+
+/* --------------------------------
+   TOP3選択
+-------------------------------- */
+
+let finalWins = {};
+
+
+function chooseFinal(index) {
+
+    const winner =
+        currentPair[index];
+
+    finalWins[winner.name] =
+        (finalWins[winner.name] || 0) + 1;
+
+}
+
+
+/* --------------------------------
+   クリック処理を上書き
+-------------------------------- */
+
+document.querySelectorAll(".card")[0]
+    .onclick = function() {
+
+        if (totalMatches === 3 &&
+            currentStage[0] &&
+            currentStage[0][0] &&
+            typeof currentStage[0][0] !== "number") {
+
+            chooseFinal(0);
+
+            matchIndex++;
+
+            if (matchIndex < totalMatches) {
+
+                showFinalMatch();
+
+            } else {
+
+                finishFinal();
+
+            }
+
+        } else {
+
+            choose(0);
+
+        }
+
+    };
+
+
+document.querySelectorAll(".card")[1]
+    .onclick = function() {
+
+        if (totalMatches === 3 &&
+            currentStage[0] &&
+            currentStage[0][0] &&
+            typeof currentStage[0][0] !== "number") {
+
+            chooseFinal(1);
+
+            matchIndex++;
+
+            if (matchIndex < totalMatches) {
+
+                showFinalMatch();
+
+            } else {
+
+                finishFinal();
+
+            }
+
+        } else {
+
+            choose(1);
+
+        }
+
+    };
+
+
+/* --------------------------------
+   最終結果
+-------------------------------- */
+
+function finishFinal() {
+
+    const ranking =
+        Object.keys(finalWins)
+        .sort((a,b) =>
+            finalWins[b] - finalWins[a]
+        )
+        .map(name =>
+            members.find(m =>
+                m.name === name
+            )
+        );
+
+
+    document
+        .getElementById("gameScreen")
+        .classList.add("hidden");
+
+    document
+        .getElementById("resultScreen")
+        .classList.remove("hidden");
+
+
+    const rankingElement =
+        document.getElementById("ranking");
+
+
+    rankingElement.innerHTML = "";
+
+
+    ranking.forEach((member, index) => {
+
+        rankingElement.innerHTML += `
+
+            <div class="rank-card">
+
+                <div class="rank-number">
+                    ${index + 1}
+                </div>
+
+                <img src="${member.image}">
+
+                <div class="rank-info">
+
+                    <div class="group">
+                        ${member.group}
+                    </div>
+
+                    <div class="name">
+                        ${member.name}
+                    </div>
+
+                </div>
+
+            </div>
+
+        `;
+
+    });
+
+}
+
+</script>
+
+</body>
+</html>
