@@ -3,90 +3,130 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>BOYNEXTDOOR 好き顔6</title>
+<title>HYBEナムドル 私の好き顔TOP9</title>
 
 <style>
+body { background: #FEF9FB; }
+* { box-sizing: border-box; }
 
-* {
-    box-sizing: border-box;
+:root {
+    --bg: #fef9fb;
+    --card: #ffffff;
+    --text: #2d2d2d;
+    --sub: #8a8a8a;
+    --line: #e8e3df;
+    --accent: #222222;
 }
 
 body {
     margin: 0;
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Helvetica Neue",
-        Arial,
-        sans-serif;
-
-    background: #f8f5f2;
-    color: #333;
-    text-align: center;
-}
-
-.container {
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 30px 15px 50px;
-}
-
-h1 {
-    font-size: 30px;
-    margin: 20px 0 10px;
-}
-
-.subtitle {
-    color: #777;
-    margin-bottom: 35px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+        "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, Arial, sans-serif;
 }
 
 button {
-    border: none;
+    font: inherit;
+    border: 0;
     cursor: pointer;
-    font-family: inherit;
+}
+
+.app {
+    width: min(760px, 100%);
+    margin: 0 auto;
+    padding: 28px 14px 50px;
+}
+
+.screen { display: none; }
+.screen.active { display: block; }
+
+h1 {
+    margin: 8px 0 12px;
+    font-size: clamp(28px, 7vw, 42px);
+    line-height: 1.2;
+    letter-spacing: .02em;
+}
+
+h2 {
+    margin: 0;
+    font-size: clamp(22px, 5vw, 30px);
+}
+
+.lead {
+    color: var(--sub);
+    line-height: 1.7;
+    margin: 0 auto 26px;
+}
+
+.start-wrap {
+    min-height: 78vh;
+    display: grid;
+    place-items: center;
+    text-align: center;
+}
+
+.start-inner {
+    width: 100%;
+    max-width: 560px;
 }
 
 .start-button,
-.retry-button {
-    background: #222;
+.retry-button,
+.continue-button {
+    background: var(--accent);
     color: white;
-    border-radius: 30px;
-    padding: 15px 35px;
-    font-size: 17px;
+    border-radius: 999px;
+    padding: 14px 34px;
+    font-weight: 700;
+    letter-spacing: .04em;
 }
 
-.hidden {
-    display: none !important;
+.note {
+    margin-top: 18px;
+    color: var(--sub);
+    font-size: 12px;
+    line-height: 1.7;
 }
 
-/* 対戦画面 */
+.stage-header {
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+.stage-name {
+    font-size: 13px;
+    color: var(--sub);
+    margin-bottom: 5px;
+}
 
 .progress {
-    font-size: 14px;
-    color: #888;
-    margin-bottom: 15px;
+    font-size: 12px;
+    color: var(--sub);
 }
 
 .matchup {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 12px;
-    justify-content: center;
 }
 
 .card {
-    width: 50%;
-    background: white;
+    background: var(--card);
+    border: 2px solid transparent;
     border-radius: 18px;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    cursor: pointer;
-    transition: transform 0.15s;
+    box-shadow: 0 5px 20px rgba(0,0,0,.07);
+    transition: transform .12s, border-color .12s, box-shadow .12s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.card:hover {
+    transform: translateY(-2px);
 }
 
 .card:active {
-    transform: scale(0.97);
+    transform: scale(.985);
 }
 
 .card img {
@@ -94,582 +134,1082 @@ button {
     width: 100%;
     aspect-ratio: 3 / 4;
     object-fit: cover;
+    background: #eee;
 }
 
-.info {
-    padding: 13px 8px 16px;
+.card-info {
+    padding: 12px 9px 15px;
+    text-align: center;
 }
 
 .group {
+    color: var(--sub);
     font-size: 11px;
-    color: #999;
     margin-bottom: 4px;
 }
 
-.name {
-    font-size: 18px;
-    font-weight: bold;
+.member-name {
+    font-size: clamp(15px, 4vw, 19px);
+    font-weight: 800;
+    letter-spacing: .02em;
 }
 
-/* 結果 */
-
-.result-title {
-    margin-top: 20px;
+.tap-hint {
+    text-align: center;
+    color: var(--sub);
+    font-size: 12px;
+    margin: 14px 0 0;
 }
 
-.ranking {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 25px;
+.center {
+    text-align: center;
 }
 
-.rank-card {
-    display: flex;
+.result-header {
+    text-align: center;
+    margin-bottom: 22px;
+}
+
+.result-list {
+    display: grid;
+    gap: 10px;
+}
+
+.result-card {
+    display: grid;
+    grid-template-columns: 48px 74px 1fr;
     align-items: center;
-    background: white;
+    gap: 10px;
+    background: var(--card);
     border-radius: 15px;
-    padding: 10px;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+    padding: 9px;
+    box-shadow: 0 3px 13px rgba(0,0,0,.06);
 }
 
-.rank-number {
-    width: 45px;
+.result-rank {
+    text-align: center;
     font-size: 22px;
-    font-weight: bold;
+    font-weight: 900;
 }
 
-.rank-card img {
-    width: 75px;
-    height: 95px;
+.result-card img {
+    width: 74px;
+    height: 94px;
     object-fit: cover;
     border-radius: 10px;
 }
 
-.rank-info {
+.result-info {
     text-align: left;
-    padding-left: 15px;
 }
 
-.rank-info .group {
-    margin-bottom: 5px;
+.result-info .member-name {
+    font-size: 17px;
 }
+
+.result-meta {
+    margin-top: 3px;
+    color: var(--sub);
+    font-size: 11px;
+}
+
+.result-actions {
+    text-align: center;
+    margin-top: 24px;
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    place-items: center;
+    padding: 20px;
+    background: rgba(0,0,0,.42);
+    z-index: 20;
+}
+
+.modal.active { display: grid; }
+
+.modal-box {
+    width: min(500px, 100%);
+    max-height: 85vh;
+    overflow: auto;
+    background: white;
+    border-radius: 20px;
+    padding: 22px;
+    text-align: center;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.modal-text {
+    color: #666;
+    font-size: 13px;
+    line-height: 1.7;
+    margin-bottom: 16px;
+}
+
+.tie-list {
+    display: grid;
+    gap: 8px;
+    margin: 14px 0 18px;
+}
+
+.tie-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 12px;
+    background: #f7f5f3;
+    border-radius: 10px;
+}
+
+@media (max-width: 430px) {
+    .app { padding-left: 10px; padding-right: 10px; }
+    .matchup { gap: 8px; }
+    .card-info { padding-left: 5px; padding-right: 5px; }
+    .result-card { grid-template-columns: 38px 66px 1fr; }
+    .result-card img { width: 66px; height: 84px; }
+}
+.copyright-notice {
+      margin: 18px auto 0;
+      max-width: 720px;
+      padding: 0 20px;
+      font-size: 11px;
+      line-height: 1.7;
+      color: #888;
+      text-align: center;
+    }
+    .secondary-btn {
+      border: 1px solid #ddd;
+      background: #fff;
+      color: #444;
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .secondary-btn:hover { opacity: .8; }
+    
+.explain-screen {
+    width: min(92%, 720px);
+    margin: 0 auto;
+    padding: 36px 24px;
+    text-align: center;
+    background: rgba(255,255,255,.72);
+    border-radius: 24px;
+}
+.step-label {
+    font-size: 13px;
+    letter-spacing: .08em;
+    opacity: .65;
+    margin-bottom: 10px;
+}
+.explain-screen h2 { margin: 0 0 20px; }
+.explain-screen p { line-height: 1.9; }
+.big-count { font-size: 20px; }
+.primary-action {
+    display: block;
+    margin: 24px auto 0;
+    padding: 13px 28px;
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 15px;
+}
+.multi-choice { flex-wrap: wrap; justify-content: center; }
+.candidate-card {
+    position: relative;
+    display: block;
+    width: min(220px, 42vw);
+    cursor: pointer;
+    border-radius: 18px;
+    overflow: hidden;
+}
+.candidate-card input {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 22px;
+    height: 22px;
+    z-index: 2;
+}
+.candidate-card img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    display: block;
+}
+.candidate-card:has(input:checked) {
+    outline: 4px solid #d98ba7;
+    outline-offset: -4px;
+}
+.candidate-result-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+    gap: 12px;
+    margin: 24px 0;
+}
+.candidate-result-item img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    border-radius: 12px;
+}
+.candidate-result-item div { font-weight: 600; margin-top: 5px; }
+.candidate-result-item small { opacity: .65; }
+.rank-instruction {
+    width: 100%;
+    text-align: center;
+    margin: 8px 0;
+    font-weight: 700;
+}
+.rank-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    gap: 10px;
+    width: 100%;
+}
+.mini-card {
+    border: 0;
+    border-radius: 14px;
+    padding: 0 0 8px;
+    overflow: hidden;
+    background: white;
+    cursor: pointer;
+}
+.mini-card img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+}
+.mini-card span, .mini-card small { display: block; }
+.mini-card span { font-weight: 700; margin-top: 4px; }
+.mini-card small { opacity: .65; }
+.mini-card.selected { outline: 4px solid #d98ba7; }
+.mini-card:disabled { opacity: .35; cursor: default; }
 
 </style>
 </head>
 
 <body>
+<div class="app">
 
-<div class="container">
-
-    <!-- スタート画面 -->
-
-    <section id="startScreen">
-
-        <h1>BOYNEXTDOOR<br>好き顔6</h1>
-
-        <p class="subtitle">
-            直感で「好き！」と思う方を選んでね
-        </p>
-
-        <button class="start-button" onclick="startGame()">
-            START
-        </button>
-
+    <!-- START -->
+    <section id="startScreen" class="screen active">
+        <div class="start-wrap">
+            <div class="start-inner">
+                <h1>HYBEナムドル<br>私の好き顔TOP9</h1>
+                <p class="lead">
+                    HYBE所属の男性アイドル57人から、<br>
+                    直感で「好き！」と思う顔を選んでね。
+                </p>
+                <button class="start-button" id="startButton">START</button>
+<div id="resume-actions" style="display:none;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px;">
+  <button class="secondary-btn" onclick="showSavedResult()">結果を見る</button>
+  <button class="secondary-btn" onclick="startFreshGame()">はじめからやり直す</button>
+</div>
+                <p class="note">
+                    全グループ混合・ランダム対戦。<br>
+                    各ステージの結果をもとに最終57人の勝利数からTOP9を決定します。
+                </p>
+                <p class="copyright-notice">本サイト内における画像は著作権法第32条における「引用の目的正当な範囲」に則り使用しています。</p>
+            </div>
+        </div>
     </section>
 
 
-    <!-- ゲーム画面 -->
+    <!-- PRELIMINARY INTRO -->
+    <section id="prelimIntroScreen" class="screen">
+        <div class="explain-screen">
+            <div class="step-label">STEP 1　予選</div>
+            <h2>まずは「好き！」を見つけよう</h2>
+            <p>4人のメンバーが表示されます。<br>
+            この中から<strong>好きなメンバーを0～3人</strong>選んでください。</p>
+            <p>「この人好き！」と思ったら何人選んでもOK。<br>
+            誰も選ばなくても大丈夫です。</p>
+            <button class="primary-action" id="startPreliminaryButton">予選をはじめる</button>
+        </div>
+    </section>
 
-    <section id="gameScreen" class="hidden">
+    <!-- CANDIDATE RESULT -->
+    <section id="candidateResultScreen" class="screen">
+        <div class="explain-screen">
+            <div class="step-label">STEP 1　予選結果</div>
+            <h2>予選終了！</h2>
+            <p class="big-count">好きな顔候補は<strong id="candidateCount">0</strong>人でした！</p>
+            <p>これより候補同士を直接比較する<br><strong>本選</strong>へ進みます。</p>
+            <div class="candidate-result-list" id="candidateResultList"></div>
+            <button class="primary-action" id="startMainButton">本選へ進む</button>
+        </div>
+    </section>
 
-        <div class="progress" id="progress"></div>
+    <!-- MAIN INTRO -->
+    <section id="mainIntroScreen" class="screen">
+        <div class="explain-screen">
+            <div class="step-label">STEP 2　本選</div>
+            <h2 id="mainIntroTitle">本選 ROUND 1</h2>
+            <p>ここからは候補メンバーを直接比較します。</p>
+            <p><strong>① 1番好きな顔</strong>を選び、<br>
+            <strong>② 次に好きな顔</strong>を選んでください。</p>
+            <p>各グループの上位2人が、<br>次のROUNDへ進みます。</p>
+            <button class="primary-action" id="startCurrentMainButton">ROUND 1をはじめる</button>
+        </div>
+    </section>
 
-        <div class="matchup">
-
-            <div class="card" onclick="choose(0)">
-
-                <img id="img0">
-
-                <div class="info">
-                    <div class="group" id="group0"></div>
-                    <div class="name" id="name0"></div>
-                </div>
-
-            </div>
-
-
-            <div class="card" onclick="choose(1)">
-
-                <img id="img1">
-
-                <div class="info">
-                    <div class="group" id="group1"></div>
-                    <div class="name" id="name1"></div>
-                </div>
-
-            </div>
-
+    <!-- GAME -->
+    <section id="gameScreen" class="screen">
+        <div class="stage-header">
+            <div class="stage-name" id="stageName"></div>
+            <h2 id="stageTitle"></h2>
+            <div class="progress" id="progress"></div>
         </div>
 
+        <div class="matchup">
+            <button class="card" id="card0" type="button">
+                <img id="img0" alt="">
+                <div class="card-info">
+                    <div class="group" id="group0"></div>
+                    <div class="member-name" id="name0"></div>
+                </div>
+            </button>
+
+            <button class="card" id="card1" type="button">
+                <img id="img1" alt="">
+                <div class="card-info">
+                    <div class="group" id="group1"></div>
+                    <div class="member-name" id="name1"></div>
+                </div>
+            </button>
+        </div>
+
+        <p class="tap-hint">好きな方をタップ</p>
+        <button id="back-match-btn" class="secondary-btn" onclick="goBackOneMatch()" style="margin:12px auto;display:block;" disabled>ひとつ前にもどる</button>
     </section>
 
 
-    <!-- 結果画面 -->
-
-    <section id="resultScreen" class="hidden">
-
-        <h1 class="result-title">
-            あなたの好き顔TOP3
-        </h1>
-
-        <div id="ranking" class="ranking"></div>
-
-        <button
-            class="retry-button"
-            onclick="location.reload()"
-            style="margin-top:30px;"
-        >
-            もう一度遊ぶ
-        </button>
-
+    <!-- FINAL INTRO -->
+    <section id="finalIntroScreen" class="screen">
+        <div class="explain-screen">
+            <div class="step-label">STEP 3　決勝戦</div>
+            <h2>いよいよ決勝戦！</h2>
+            <p>ここからは2人ずつ直接比較します。</p>
+            <p><strong>より好きな顔をタップ</strong>してください。<br>
+            選ばれたメンバーが次へ進みます。</p>
+            <p>TOP9が決まった時点で終了です。</p>
+            <button class="primary-action" id="startFinalButton">決勝戦をはじめる</button>
+        </div>
     </section>
 
+    <!-- RESULT -->
+    <section id="resultScreen" class="screen">
+        <div class="result-header">
+            <div class="stage-name">FINAL RESULT</div>
+            <h2>あなたの好き顔 TOP9</h2>
+            <p class="lead">あなたが選んだ9人です。</p>
+        </div>
+
+        <div class="result-list" id="resultList"></div>
+
+        <div class="result-actions" id="result-actions">
+            <button class="secondary-btn" id="shareXButton" type="button">Xで結果をシェア</button>
+            <button class="secondary-btn" id="copyResultButton" type="button">結果をテキストでコピー</button>
+            <button class="retry-button" id="retryButton" type="button">もう一度やる</button>
+        </div>
+    </section>
+
+    <!-- TIE BREAK -->
+    <div class="modal" id="tieModal">
+        <div class="modal-box">
+            <div class="modal-title" id="tieTitle">タイブレーク</div>
+            <div class="modal-text" id="tieText"></div>
+            <div class="tie-list" id="tieList"></div>
+            <button class="continue-button" id="tieContinue">続ける</button>
+        </div>
+    </div>
 </div>
 
-
 <script>
+/*
+ * 画像はすべて images/ フォルダに置いてください。
+ * ファイル名は下記の image と完全一致させます。
+ */
 
 const members = [
+    // BTS
+    { group: "BTS", name: "RM", image: "images/rm.jpg" },
+    { group: "BTS", name: "JIN", image: "images/jin.jpg" },
+    { group: "BTS", name: "SUGA", image: "images/suga.jpg" },
+    { group: "BTS", name: "J-HOPE", image: "images/jhope.jpg" },
+    { group: "BTS", name: "JIMIN", image: "images/jimin.jpg" },
+    { group: "BTS", name: "V", image: "images/v.jpg" },
+    { group: "BTS", name: "JUNG KOOK", image: "images/jungkook.jpg" },
 
-    {
-        group: "BOYNEXTDOOR",
-        name: "SUNGHO",
-        image: "images/sungho.jpg"
-    },
+    // SEVENTEEN
+    { group: "SEVENTEEN", name: "S.COUPS", image: "images/scoups.jpg" },
+    { group: "SEVENTEEN", name: "JEONGHAN", image: "images/jeonghan.jpg" },
+    { group: "SEVENTEEN", name: "JOSHUA", image: "images/joshua.jpg" },
+    { group: "SEVENTEEN", name: "JUN", image: "images/jun.jpg" },
+    { group: "SEVENTEEN", name: "HOSHI", image: "images/hoshi.jpg" },
+    { group: "SEVENTEEN", name: "WONWOO", image: "images/wonwoo.jpg" },
+    { group: "SEVENTEEN", name: "WOOZI", image: "images/woozi.jpg" },
+    { group: "SEVENTEEN", name: "THE 8", image: "images/the8.jpg" },
+    { group: "SEVENTEEN", name: "MINGYU", image: "images/mingyu.jpg" },
+    { group: "SEVENTEEN", name: "DK", image: "images/dk.jpg" },
+    { group: "SEVENTEEN", name: "SEUNGKWAN", image: "images/seungkwan.jpg" },
+    { group: "SEVENTEEN", name: "VERNON", image: "images/vernon.jpg" },
+    { group: "SEVENTEEN", name: "DINO", image: "images/dino.jpg" },
 
-    {
-        group: "BOYNEXTDOOR",
-        name: "RIWOO",
-        image: "images/riwoo.jpg"
-    },
+    // TXT
+    { group: "TXT", name: "SOOBIN", image: "images/soobin.jpg" },
+    { group: "TXT", name: "YEONJUN", image: "images/yeonjun.jpg" },
+    { group: "TXT", name: "BEOMGYU", image: "images/beomgyu.jpg" },
+    { group: "TXT", name: "TAEHYUN", image: "images/taehyun.jpg" },
+    { group: "TXT", name: "HUENINGKAI", image: "images/hueningkai.jpg" },
 
-    {
-        group: "BOYNEXTDOOR",
-        name: "JAEHYUN",
-        image: "images/jaehyun.jpg"
-    },
+    // ENHYPEN
+    { group: "ENHYPEN", name: "JUNGWON", image: "images/jungwon.jpg" },
+    { group: "ENHYPEN", name: "JAY", image: "images/jay.jpg" },
+    { group: "ENHYPEN", name: "JAKE", image: "images/jake.jpg" },
+    { group: "ENHYPEN", name: "SUNGHOON", image: "images/sunghoon.jpg" },
+    { group: "ENHYPEN", name: "SUNOO", image: "images/sunoo.jpg" },
+    { group: "ENHYPEN", name: "NI-KI", image: "images/niki.jpg" },
 
-    {
-        group: "BOYNEXTDOOR",
-        name: "TAESAN",
-        image: "images/taesan.jpg"
-    },
+    // &TEAM
+    { group: "&TEAM", name: "K", image: "images/k.jpg" },
+    { group: "&TEAM", name: "FUMA", image: "images/fuma.jpg" },
+    { group: "&TEAM", name: "NICHOLAS", image: "images/nicholas.jpg" },
+    { group: "&TEAM", name: "EJ", image: "images/ej.jpg" },
+    { group: "&TEAM", name: "YUMA", image: "images/yuma.jpg" },
+    { group: "&TEAM", name: "JO", image: "images/jo.jpg" },
+    { group: "&TEAM", name: "HARUA", image: "images/harua.jpg" },
+    { group: "&TEAM", name: "TAKI", image: "images/taki.jpg" },
+    { group: "&TEAM", name: "MAKI", image: "images/maki.jpg" },
 
-    {
-        group: "BOYNEXTDOOR",
-        name: "LEEHAN",
-        image: "images/leehan.jpg"
-    },
+    // BOYNEXTDOOR
+    { group: "BOYNEXTDOOR", name: "SUNGHO", image: "images/sungho.jpg" },
+    { group: "BOYNEXTDOOR", name: "RIWOO", image: "images/riwoo.jpg" },
+    { group: "BOYNEXTDOOR", name: "JAEHYUN", image: "images/jaehyun.jpg" },
+    { group: "BOYNEXTDOOR", name: "TAESAN", image: "images/taesan.jpg" },
+    { group: "BOYNEXTDOOR", name: "LEEHAN", image: "images/leehan.jpg" },
+    { group: "BOYNEXTDOOR", name: "WOONHAK", image: "images/woonhak.jpg" },
 
-    {
-        group: "BOYNEXTDOOR",
-        name: "WOONHAK",
-        image: "images/woonhak.jpg"
-    }
+    // TWS
+    { group: "TWS", name: "SHINYU", image: "images/shinyu.jpg" },
+    { group: "TWS", name: "DOHOON", image: "images/dohoon.jpg" },
+    { group: "TWS", name: "YOUNGJAE", image: "images/youngjae.jpg" },
+    { group: "TWS", name: "HANJIN", image: "images/hanjin.jpg" },
+    { group: "TWS", name: "JIHOON", image: "images/jihoon.jpg" },
+    { group: "TWS", name: "KYUNGMIN", image: "images/kyungmin.jpg" },
 
+    // CORTIS
+    { group: "CORTIS", name: "MARTIN", image: "images/martin.jpg" },
+    { group: "CORTIS", name: "JAMES", image: "images/james.jpg" },
+    { group: "CORTIS", name: "JUHOON", image: "images/juhoon.jpg" },
+    { group: "CORTIS", name: "SEONGHYEON", image: "images/seonghyeon.jpg" },
+    { group: "CORTIS", name: "KEONHO", image: "images/keonho.jpg" }
 ];
 
+const $ = (id) => document.getElementById(id);
 
-let currentStage = [];
-let nextStage = [];
+const startScreen = $("startScreen");
+const prelimIntroScreen = $("prelimIntroScreen");
+const candidateResultScreen = $("candidateResultScreen");
+const mainIntroScreen = $("mainIntroScreen");
+const finalIntroScreen = $("finalIntroScreen");
+const gameScreen = $("gameScreen");
+const resultScreen = $("resultScreen");
 
+let stage = 0;
+let matches = [];
 let matchIndex = 0;
-let totalMatches = 0;
+let currentPair = null;
+let finalSelected = new Set();
+let finalChallenger = null;
+let finalOpponent = null;
 
-let wins = {};
+let stageWins = new Map();
+let stageParticipants = [];
 
-let currentPair = [];
+const stageConfig = {
+    1: { name: "予選", title: "好きな顔を選ぼう" },
+    2: { name: "本選 ROUND 1", title: "1番好き → 次に好き" },
+    3: { name: "本選 ROUND 2", title: "1番好き → 次に好き" },
+    4: { name: "本選 ROUND 3", title: "1番好き → 次に好き" },
+    5: { name: "決勝戦", title: "より好きな顔を選んでください" }
+};
 
-
-/* --------------------------------
-   ゲーム開始
--------------------------------- */
-
-function startGame() {
-
-    document
-        .getElementById("startScreen")
-        .classList.add("hidden");
-
-    document
-        .getElementById("gameScreen")
-        .classList.remove("hidden");
-
-
-    startPreliminary();
-
+function shuffle(array) {
+    const a = [...array];
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
 }
 
+/*
+ * 円環方式：
+ * n人をランダムに並べ、隣同士を対戦させる。
+ * n試合で各人がちょうど2回登場する。
+ * 同一ステージ内で同じ相手は重複しない。
+ */
+function makeCycleMatches(participants) {
+    const p = shuffle(participants);
+    const result = [];
 
-/* --------------------------------
-   予選
-   6人 → 3人
-   全員2回ずつ程度登場
--------------------------------- */
-
-function startPreliminary() {
-
-    currentStage = [...members];
-
-    nextStage = [];
-
-    matchIndex = 0;
-
-    totalMatches = 6;
-
-    wins = {};
-
-    members.forEach(member => {
-        wins[member.name] = 0;
-    });
-
-
-    // 対戦カード
-    const pairs = [
-
-        [0, 1],
-        [2, 3],
-        [4, 5],
-
-        [0, 2],
-        [1, 4],
-        [3, 5]
-
-    ];
-
-
-    currentStage = pairs;
-
-    showMatch();
-
-}
-
-
-/* --------------------------------
-   対戦表示
--------------------------------- */
-
-function showMatch() {
-
-    currentPair =
-        currentStage[matchIndex];
-
-
-    const a =
-        members[currentPair[0]];
-
-    const b =
-        members[currentPair[1]];
-
-
-    document.getElementById("img0").src =
-        a.image;
-
-    document.getElementById("img1").src =
-        b.image;
-
-
-    document.getElementById("group0").textContent =
-        a.group;
-
-    document.getElementById("group1").textContent =
-        b.group;
-
-
-    document.getElementById("name0").textContent =
-        a.name;
-
-    document.getElementById("name1").textContent =
-        b.name;
-
-
-    document.getElementById("progress").textContent =
-        `${matchIndex + 1} / ${totalMatches}`;
-
-}
-
-
-/* --------------------------------
-   選択
--------------------------------- */
-
-function choose(index) {
-
-    const winnerIndex =
-        currentPair[index];
-
-    wins[members[winnerIndex].name]++;
-
-
-    matchIndex++;
-
-
-    if (matchIndex < totalMatches) {
-
-        showMatch();
-
-    } else {
-
-        finishPreliminary();
-
+    for (let i = 0; i < p.length; i++) {
+        result.push([p[i], p[(i + 1) % p.length]]);
     }
 
+    return result;
+}
+
+/*
+ * 偶数人数を1回ずつ出す通常のペアリング。
+ */
+function makeRoundRobinMatches(participants) {
+    const p = shuffle(participants);
+    const result = [];
+
+    for (let i = 0; i < p.length; i++) {
+        for (let j = i + 1; j < p.length; j++) {
+            result.push([p[i], p[j]]);
+        }
+    }
+
+    return shuffle(result);
+}
+
+function makeSingleMatches(participants) {
+    const p = shuffle(participants);
+    const result = [];
+
+    for (let i = 0; i < p.length; i += 2) {
+        result.push([p[i], p[i + 1]]);
+    }
+
+    return result;
+}
+
+function initWins(participants) {
+    stageWins = new Map();
+    participants.forEach(m => stageWins.set(m.name, 0));
+}
+
+function addWin(member) {
+    stageWins.set(member.name, (stageWins.get(member.name) || 0) + 1);
+}
+
+function sortByWins(participants) {
+    return [...participants].sort((a, b) => {
+        const diff = (stageWins.get(b.name) || 0) - (stageWins.get(a.name) || 0);
+        if (diff !== 0) return diff;
+        return 0;
+    });
+}
+
+function showScreen(screen) {
+    [startScreen, prelimIntroScreen, candidateResultScreen, mainIntroScreen, finalIntroScreen, gameScreen, resultScreen].forEach(s => s.classList.remove("active"));
+    screen.classList.add("active");
 }
 
 
-/* --------------------------------
-   予選結果
--------------------------------- */
-
-function finishPreliminary() {
-
-    const sorted =
-        [...members]
-        .sort((a, b) =>
-            wins[b.name] - wins[a.name]
-        );
-
-
-    const top3 =
-        sorted.slice(0, 3);
-
-
-    startFinal(top3);
-
+function startGame() {
+    stage = 1;
+    matchHistory = [];
+    stageParticipants = shuffle([...members]);
+    beginStage();
 }
 
-
-/* --------------------------------
-   TOP3決定戦
--------------------------------- */
-
-function startFinal(top3) {
-
-    document
-        .getElementById("progress")
-        .textContent = "TOP3決定戦";
-
-
-    currentStage = [
-
-        [top3[0], top3[1]],
-        [top3[0], top3[2]],
-        [top3[1], top3[2]]
-
-    ];
-
+function beginStage() {
+    closeTieModal();
+    matchHistory = [];
     matchIndex = 0;
+    stageWins = new Map();
 
-    totalMatches = 3;
+    if (stage === 1) {
+        // 予選：4人×12組＋3人×3組＝57人
+        matches = makePreliminaryGroups(stageParticipants);
+        $("stageName").textContent = stageConfig[1].name;
+        $("stageTitle").textContent = stageConfig[1].title;
+        showScreen(gameScreen);
+        showPreliminaryGroup();
+        return;
+    }
 
-    showFinalMatch();
+    // 本選ROUND 1～3
+    if (stage === 2 || stage === 3 || stage === 4) {
+        matches = makeMainRoundGroups(stageParticipants);
+        $("stageName").textContent = stageConfig[stage].name;
+        $("stageTitle").textContent = stageConfig[stage].title;
+        showScreen(gameScreen);
+        showMainRoundGroup();
+        return;
+    }
 
+    // 決勝戦
+    if (stage === 5) {
+        finalSelected = new Set();
+        finalChallenger = null;
+        finalOpponent = null;
+        currentPair = null;
+        matches = makeFinalMatches(stageParticipants);
+        $("stageName").textContent = stageConfig[5].name;
+        $("stageTitle").textContent = stageConfig[5].title;
+        showScreen(gameScreen);
+        showFinalMatch();
+    }
 }
 
+function makePreliminaryGroups(participants) {
+    const p = shuffle(participants);
+    const groups = [];
+    // 57人 = 4人×12 + 3人×3
+    let index = 0;
+    for (let i = 0; i < 12; i++) {
+        groups.push(p.slice(index, index + 4));
+        index += 4;
+    }
+    for (let i = 0; i < 3; i++) {
+        groups.push(p.slice(index, index + 3));
+        index += 3;
+    }
+    return groups;
+}
 
-/* --------------------------------
-   TOP3対戦
--------------------------------- */
+function makeMainRoundGroups(participants) {
+    const p = shuffle(participants);
+    const groups = [];
+
+    // なるべく3～4人程度のグループにして、各グループからTOP2を選ぶ。
+    // 30人前後なら4人×7＋2人、24人なら4人×6など自然なサイズになる。
+    let i = 0;
+    while (i < p.length) {
+        const remaining = p.length - i;
+        const size = remaining === 5 ? 3 : Math.min(4, remaining);
+        groups.push(p.slice(i, i + size));
+        i += size;
+    }
+    return groups;
+}
+
+function makeFinalMatches(participants) {
+    // 決勝では、候補をランダムな順番にして「9つの枠」を順番に決める。
+    // 各枠では、残り候補から2人ずつ比較し、勝者を次の比較へ進める。
+    // 9人が確定したら終了。
+    return [...shuffle(participants)];
+}
 
 function showFinalMatch() {
+    if (stageParticipants.length <= 9) {
+        finishFinal();
+        return;
+    }
 
-    currentPair =
-        currentStage[matchIndex];
+    if (!currentPair) {
+        const pool = stageParticipants.filter(m => !finalSelected.has(m.name));
+        if (pool.length <= 1) {
+            finishFinal();
+            return;
+        }
 
+        if (!finalChallenger) {
+            finalChallenger = pool[0];
+            finalOpponent = pool[1];
+        }
 
-    const a =
-        currentPair[0];
+        currentPair = [finalChallenger, finalOpponent];
+    }
 
-    const b =
-        currentPair[1];
+    const pair = currentPair;
 
+    $("matchup").className = "matchup";
+    $("matchup").innerHTML = `
+        <button class="card" id="finalCard0" type="button">
+            <img src="${pair[0].image}" alt="${pair[0].group} ${pair[0].name}">
+            <div class="card-info">
+                <div class="group">${pair[0].group}</div>
+                <div class="member-name">${pair[0].name}</div>
+            </div>
+        </button>
+        <button class="card" id="finalCard1" type="button">
+            <img src="${pair[1].image}" alt="${pair[1].group} ${pair[1].name}">
+            <div class="card-info">
+                <div class="group">${pair[1].group}</div>
+                <div class="member-name">${pair[1].name}</div>
+            </div>
+        </button>
+    `;
 
-    document.getElementById("img0").src =
-        a.image;
-
-    document.getElementById("img1").src =
-        b.image;
-
-
-    document.getElementById("group0").textContent =
-        a.group;
-
-    document.getElementById("group1").textContent =
-        b.group;
-
-
-    document.getElementById("name0").textContent =
-        a.name;
-
-    document.getElementById("name1").textContent =
-        b.name;
-
-
-    document.getElementById("progress").textContent =
-        `${matchIndex + 1} / ${totalMatches}`;
+    $("progress").textContent = `TOP${finalSelected.size + 1}決定中`;
+    $("finalCard0").addEventListener("click", () => chooseFinal(0));
+    $("finalCard1").addEventListener("click", () => chooseFinal(1));
 }
-
-
-/* --------------------------------
-   TOP3選択
--------------------------------- */
-
-let finalWins = {};
-
 
 function chooseFinal(index) {
+    matchHistory.push(snapshotGameState());
 
-    const winner =
-        currentPair[index];
+    const winner = currentPair[index];
+    finalSelected.add(winner.name);
 
-    finalWins[winner.name] =
-        (finalWins[winner.name] || 0) + 1;
+    // 次のTOP枠へ。勝者は候補から外し、9人確定まで繰り返す。
+    finalChallenger = null;
+    finalOpponent = null;
+    currentPair = null;
 
+    if (finalSelected.size >= 9 || stageParticipants.length - finalSelected.size <= 0) {
+        finishFinal();
+        return;
+    }
+
+    showFinalMatch();
 }
-
-
-/* --------------------------------
-   クリック処理を上書き
--------------------------------- */
-
-document.querySelectorAll(".card")[0]
-    .onclick = function() {
-
-        if (totalMatches === 3 &&
-            currentStage[0] &&
-            currentStage[0][0] &&
-            typeof currentStage[0][0] !== "number") {
-
-            chooseFinal(0);
-
-            matchIndex++;
-
-            if (matchIndex < totalMatches) {
-
-                showFinalMatch();
-
-            } else {
-
-                finishFinal();
-
-            }
-
-        } else {
-
-            choose(0);
-
-        }
-
-    };
-
-
-document.querySelectorAll(".card")[1]
-    .onclick = function() {
-
-        if (totalMatches === 3 &&
-            currentStage[0] &&
-            currentStage[0][0] &&
-            typeof currentStage[0][0] !== "number") {
-
-            chooseFinal(1);
-
-            matchIndex++;
-
-            if (matchIndex < totalMatches) {
-
-                showFinalMatch();
-
-            } else {
-
-                finishFinal();
-
-            }
-
-        } else {
-
-            choose(1);
-
-        }
-
-    };
-
-
-/* --------------------------------
-   最終結果
--------------------------------- */
 
 function finishFinal() {
+    const ranking = [...stageParticipants]
+        .filter(m => finalSelected.has(m.name));
 
-    const ranking =
-        Object.keys(finalWins)
-        .sort((a,b) =>
-            finalWins[b] - finalWins[a]
-        )
-        .map(name =>
-            members.find(m =>
-                m.name === name
+    renderRanking(ranking.slice(0, 9));
+    saveGameResult(ranking.slice(0, 9));
+    showScreen(resultScreen);
+    showResultActions();
+    updateResumeButton();
+}
+
+/*
+ * 同点でボーダーにかかった場合のタイブレーク。
+ * 例：30位が複数人同点なら、その同点グループだけで
+ * 勝ち上がり戦を行い、必要人数になるまで決着させる。
+ */
+function resolveCutoff(sorted, target, callback) {
+    const cutoffScore = stageWins.get(sorted[target - 1].name) || 0;
+
+    const guaranteed = sorted.filter(
+        m => (stageWins.get(m.name) || 0) > cutoffScore
+    );
+
+    const tied = sorted.filter(
+        m => (stageWins.get(m.name) || 0) === cutoffScore
+    );
+
+    const need = target - guaranteed.length;
+
+    if (need <= 0) {
+        callback();
+        return;
+    }
+
+    if (tied.length <= need) {
+        callback();
+        return;
+    }
+
+    /*
+     * 同点グループから必要人数を決める。
+     * まず1対1のランダム対戦を繰り返し、
+     * 必要人数に達するまで勝者を残す。
+     */
+    runTieBreak(tied, need, (winners) => {
+        const winnerSet = new Set(winners.map(m => m.name));
+
+        const newOrder = [
+            ...guaranteed,
+            ...winners,
+            ...tied.filter(m => !winnerSet.has(m.name)),
+            ...sorted.filter(m =>
+                !guaranteed.some(x => x.name === m.name) &&
+                !tied.some(x => x.name === m.name)
             )
-        );
+        ];
 
+        sorted.splice(0, sorted.length, ...newOrder);
+        callback();
+    });
+}
 
-    document
-        .getElementById("gameScreen")
-        .classList.add("hidden");
+function runTieBreak(candidates, need, done) {
+    /*
+     * タイブレークは「同時に複数カードを出す」のではなく、
+     * 1試合ずつ順番に表示する。
+     * これによりスマホでも確実に操作できます。
+     */
+    let pool = shuffle(candidates);
 
-    document
-        .getElementById("resultScreen")
-        .classList.remove("hidden");
+    function playRound() {
+        if (pool.length <= need) {
+            done(pool);
+            return;
+        }
 
+        const pairs = [];
+        for (let i = 0; i + 1 < pool.length; i += 2) {
+            pairs.push([pool[i], pool[i + 1]]);
+        }
 
-    const rankingElement =
-        document.getElementById("ranking");
+        const next = [];
+        let pairIndex = 0;
 
+        function playNextPair() {
+            if (pairIndex >= pairs.length) {
+                /*
+                 * 人数が奇数なら最後の1人は自動的に次ラウンドへ。
+                 */
+                if (pool.length % 2 === 1) {
+                    next.push(pool[pool.length - 1]);
+                }
 
-    rankingElement.innerHTML = "";
+                pool = shuffle(next);
+                playRound();
+                return;
+            }
 
+            const [a, b] = pairs[pairIndex];
 
-    ranking.forEach((member, index) => {
+            openTieMatch(a, b, (winner) => {
+                next.push(winner);
+                pairIndex++;
+                playNextPair();
+            });
+        }
 
-        rankingElement.innerHTML += `
+        playNextPair();
+    }
 
-            <div class="rank-card">
+    playRound();
+}
 
-                <div class="rank-number">
-                    ${index + 1}
-                </div>
+let tieCallback = null;
 
-                <img src="${member.image}">
+function openTieMatch(a, b, callback) {
+    tieCallback = callback;
 
-                <div class="rank-info">
+    $("tieTitle").textContent = "タイブレーク";
+    $("tieText").textContent = "同点のため、勝ち上がる方を選んでください。";
 
-                    <div class="group">
-                        ${member.group}
-                    </div>
+    $("tieList").innerHTML = `
+        <button class="tie-row" type="button" id="tieA">
+            <span>${a.group}　${a.name}</span>
+            <strong>選ぶ</strong>
+        </button>
+        <button class="tie-row" type="button" id="tieB">
+            <span>${b.group}　${b.name}</span>
+            <strong>選ぶ</strong>
+        </button>
+    `;
 
-                    <div class="name">
-                        ${member.name}
-                    </div>
+    $("tieContinue").style.display = "none";
+    $("tieModal").classList.add("active");
 
-                </div>
+    $("tieA").onclick = () => finishTie(a);
+    $("tieB").onclick = () => finishTie(b);
+}
 
-            </div>
+function finishTie(winner) {
+    const cb = tieCallback;
+    tieCallback = null;
+    closeTieModal();
 
-        `;
+    if (cb) cb(winner);
+}
 
+function closeTieModal() {
+    $("tieModal").classList.remove("active");
+    $("tieList").innerHTML = "";
+    $("tieContinue").style.display = "";
+}
+
+function getQualifiedFromResolved(sorted, target) {
+    return sorted.slice(0, target);
+}
+
+function finishRanking() {
+    const ranking = [...stageParticipants].sort((a, b) => {
+        const diff = (stageWins.get(b.name) || 0) - (stageWins.get(a.name) || 0);
+        if (diff !== 0) return diff;
+        return 0;
     });
 
+    renderRanking(ranking);
+    saveGameResult(ranking);
+    showScreen(resultScreen);
+    showResultActions();
+    updateResumeActions();
 }
+
+function renderRanking(ranking) {
+    $("resultList").innerHTML = "";
+
+    ranking.forEach((member, index) => {
+        const card = document.createElement("div");
+        card.className = "result-card";
+
+        card.innerHTML = `
+            <div class="result-rank">${index + 1}</div>
+            <img src="${member.image}" alt="${member.group} ${member.name}">
+            <div class="result-info">
+                <div class="member-name">${member.name}</div>
+                <div class="result-meta">${member.group}</div>
+            </div>
+        `;
+
+        $("resultList").appendChild(card);
+    });
+}
+
+$("card0").addEventListener("click", () => choose(0));
+$("card1").addEventListener("click", () => choose(1));
+
+$("startButton").addEventListener("click", () => {
+    clearSavedResult();
+    matchHistory = [];
+    showScreen(prelimIntroScreen);
+}); });
+
+
+$("startPreliminaryButton").addEventListener("click", () => {
+    stage = 1;
+    matchHistory = [];
+    stageParticipants = shuffle([...members]);
+    beginStage();
+});
+
+$("startMainButton").addEventListener("click", () => {
+    stage = 2;
+    stageParticipants = [...stageParticipants];
+    showScreen(mainIntroScreen);
+    $("mainIntroTitle").textContent = "本選 ROUND 1";
+    $("startCurrentMainButton").textContent = "ROUND 1をはじめる";
+});
+
+$("startCurrentMainButton").addEventListener("click", () => {
+    beginStage();
+});
+
+$("startFinalButton").addEventListener("click", () => {
+    stage = 5;
+    matchHistory = [];
+    beginStage();
+});
+
+$("shareXButton").addEventListener("click", shareResultToX);
+$("copyResultButton").addEventListener("click", copyResultText);
+
+$("retryButton").addEventListener("click", () => {
+    clearSavedResult();
+    matchHistory = [];
+    closeTieModal();
+    startGame();
+});
+
+/*
+ * 画像が見つからない場合に、カード上で分かるようにする。
+ */
+$("img0").addEventListener("error", function() {
+    this.alt = "画像が見つかりません";
+});
+
+$("img1").addEventListener("error", function() {
+    this.alt = "画像が見つかりません";
+});
+
+
+/* === 保存・共有機能 === */
+const SAVE_KEY = "hybeSukigaoTop9Result";
+
+function saveGameResult(ranking) {
+    try {
+        localStorage.setItem(SAVE_KEY, JSON.stringify({
+            ranking: ranking,
+            savedAt: new Date().toISOString()
+        }));
+    } catch (e) {}
+}
+
+function loadGameResult() {
+    try {
+        const raw = localStorage.getItem(SAVE_KEY);
+        return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+        return null;
+    }
+}
+
+function hasSavedResult() {
+    const saved = loadGameResult();
+    return !!(saved && Array.isArray(saved.ranking) && saved.ranking.length);
+}
+
+function clearSavedResult() {
+    try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
+}
+
+function updateResumeButton() {
+    const area = document.getElementById("resume-actions");
+    if (area) area.style.display = hasSavedResult() ? "flex" : "none";
+}
+
+function showSavedResult() {
+    const saved = loadGameResult();
+    if (!saved || !Array.isArray(saved.ranking) || !saved.ranking.length) return;
+
+    renderRanking(saved.ranking);
+    showScreen(resultScreen);
+    showResultActions();
+}
+
+function startFreshGame() {
+    clearSavedResult();
+    matchHistory = [];
+    closeTieModal();
+    startGame();
+}
+
+function makeResultText(ranking) {
+    return "HYBEナムドル 私の好き顔TOP9\n\n" +
+        ranking.slice(0, 9).map((m, i) =>
+            `${i + 1}位：${m.name}（${m.group}）`
+        ).join("\n") +
+        "\n\n#HYBEナムドル私の好き顔TOP9";
+}
+
+function shareResultToX() {
+    const saved = loadGameResult();
+    if (!saved) return;
+
+    const text = makeResultText(saved.ranking);
+    const url = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(text);
+    window.open(url, "_blank", "noopener,noreferrer");
+}
+
+async function copyResultText() {
+    const saved = loadGameResult();
+    if (!saved) return;
+
+    const text = makeResultText(saved.ranking);
+    const button = document.getElementById("copyResultButton");
+
+    try {
+        await navigator.clipboard.writeText(text);
+        if (button) {
+            const original = button.textContent;
+            button.textContent = "コピーしました！";
+            setTimeout(() => button.textContent = original, 1600);
+        }
+    } catch (e) {
+        window.prompt("以下の結果をコピーしてください", text);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    updateResumeButton();
+});
+
 
 </script>
 
