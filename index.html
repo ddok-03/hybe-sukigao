@@ -3,2005 +3,617 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HYBEナムドル 私の好き顔TOP9</title>
-
+<title>HYBE所属 ナムドル｜わたしの好きな顔 TOP9</title>
 <style>
-body { background: #FEF9FB; }
-* { box-sizing: border-box; }
-
-:root {
-    --bg: #FEF9FB;
-    --card: #ffffff;
-    --text: #2d2d2d;
-    --sub: #8a8a8a;
-    --line: #e8e3df;
-    --accent: #222222;
-}
-
-body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue",
-        "Hiragino Kaku Gothic ProN", "Yu Gothic", YuGothic, Arial, sans-serif;
-}
-
-button {
-    font: inherit;
-}
-
-.screen {
-    display: none;
-    min-height: 100vh;
-    padding: 24px 16px 48px;
-}
-
-.screen.active {
-    display: block;
-}
-
-.container {
-    width: min(100%, 760px);
-    margin: 0 auto;
-}
-
-.start-screen {
-    display: none;
-    min-height: 100vh;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-
-.start-screen.active {
-    display: flex;
-}
-
-.start-inner {
-    width: min(100%, 640px);
-    padding: 32px 20px;
-}
-
-h1 {
-    font-size: clamp(28px, 7vw, 48px);
-    line-height: 1.25;
-    margin: 0 0 18px;
-    letter-spacing: .03em;
-}
-
-.subtitle {
-    color: var(--sub);
-    line-height: 1.8;
-    margin-bottom: 32px;
-}
-
-.primary-button,
-.secondary-button {
-    border: none;
-    border-radius: 999px;
-    padding: 14px 28px;
-    cursor: pointer;
-    transition: .2s;
-}
-
-.primary-button {
-    background: #222;
-    color: white;
-}
-
-.secondary-button {
-    background: white;
-    border: 1px solid var(--line);
-    color: var(--text);
-}
-
-.primary-button:hover,
-.secondary-button:hover {
-    transform: translateY(-1px);
-}
-
-.button-row {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.explain-screen {
-    display: none;
-    min-height: 100vh;
-    align-items: center;
-    justify-content: center;
-}
-
-.explain-screen.active {
-    display: flex;
-}
-
-.explain-box {
-    width: min(100%, 680px);
-    background: white;
-    border: 1px solid var(--line);
-    border-radius: 24px;
-    padding: 32px 24px;
-    text-align: center;
-}
-
-.explain-box h2 {
-    margin: 0 0 20px;
-    font-size: 28px;
-}
-
-.explain-box p {
-    line-height: 1.9;
-    color: #555;
-}
-
-.explain-box ul {
-    text-align: left;
-    line-height: 1.9;
-    padding-left: 1.4em;
-}
-
-header {
-    text-align: center;
-    margin-bottom: 24px;
-}
-
-.stage-name {
-    font-size: 13px;
-    color: var(--sub);
-    letter-spacing: .12em;
-    margin-bottom: 7px;
-}
-
-.stage-title {
-    font-size: 26px;
-    font-weight: 700;
-    margin-bottom: 8px;
-}
-
-.progress {
-    color: var(--sub);
-    font-size: 13px;
-}
-
-.game-content {
-    margin-top: 24px;
-}
-
-.round-group-title {
-    background: white;
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 14px 16px;
-    margin-bottom: 16px;
-    text-align: center;
-    line-height: 1.7;
-    font-size: 14px;
-}
-
-.prelim-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-}
-
-.prelim-card {
-    display: block;
-    width: 100%;
-    padding: 0 0 12px;
-    overflow: hidden;
-    border: 2px solid transparent;
-    border-radius: 18px;
-    background: white;
-    cursor: pointer;
-    text-align: center;
-    transition: .2s;
-    color: var(--text);
-}
-
-.prelim-card:hover {
-    transform: translateY(-2px);
-}
-
-.prelim-card.selected {
-    border-color: #222;
-    box-shadow: 0 0 0 3px rgba(0,0,0,.06);
-}
-
-.prelim-card img {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    display: block;
-    background: #eee;
-}
-
-.prelim-card .group {
-    margin-top: 9px;
-    font-size: 11px;
-    color: var(--sub);
-}
-
-.prelim-card .member-name {
-    margin-top: 3px;
-    font-weight: 700;
-    font-size: 15px;
-}
-
-.game-actions {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-}
-
-.game-hint {
-    font-size: 13px;
-    color: var(--sub);
-    text-align: center;
-}
-
-.back-match-btn {
-    border: none;
-    background: transparent;
-    color: #777;
-    text-decoration: underline;
-    cursor: pointer;
-    padding: 7px;
-}
-
-.back-match-btn:disabled {
-    opacity: .35;
-    cursor: default;
-}
-
-#gameNextButton {
-    display: none;
-}
-
-.candidate-result-list {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 10px;
-    margin: 24px 0;
-}
-
-.candidate-result-item {
-    background: white;
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    overflow: hidden;
-    text-align: center;
-    padding-bottom: 10px;
-}
-
-.candidate-result-item img {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    display: block;
-}
-
-.candidate-result-item div {
-    font-weight: 700;
-    font-size: 13px;
-    margin-top: 7px;
-}
-
-.candidate-result-item small {
-    color: var(--sub);
-    font-size: 10px;
-}
-
-.rank-instruction {
-    background: white;
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 11px 14px;
-    margin: 14px 0 10px;
-    font-weight: 700;
-}
-
-.main-choice-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-}
-
-.mini-card {
-    border: 2px solid transparent;
-    background: white;
-    border-radius: 14px;
-    overflow: hidden;
-    padding: 0 0 9px;
-    cursor: pointer;
-    text-align: center;
-    color: var(--text);
-}
-
-.mini-card.selected {
-    border-color: #222;
-}
-
-.mini-card:disabled {
-    opacity: .35;
-    cursor: default;
-}
-
-.mini-card img {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    display: block;
-}
-
-.mini-card span {
-    display: block;
-    font-weight: 700;
-    margin-top: 6px;
-}
-
-.mini-card small {
-    color: var(--sub);
-    font-size: 10px;
-}
-
-.matchup {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
-}
-
-.card {
-    width: 100%;
-    border: 2px solid transparent;
-    background: white;
-    border-radius: 20px;
-    overflow: hidden;
-    padding: 0 0 14px;
-    cursor: pointer;
-    color: var(--text);
-}
-
-.card:hover {
-    border-color: #222;
-}
-
-.card img {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    display: block;
-}
-
-.card-info {
-    text-align: center;
-    padding-top: 10px;
-}
-
-.card-info .group {
-    color: var(--sub);
-    font-size: 11px;
-}
-
-.card-info .member-name {
-    font-size: 17px;
-    font-weight: 700;
-    margin-top: 3px;
-}
-
-.result-list {
-    display: grid;
-    gap: 10px;
-}
-
-.result-card {
-    display: grid;
-    grid-template-columns: 48px 72px 1fr;
-    align-items: center;
-    gap: 12px;
-    background: white;
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 8px;
-}
-
-.result-rank {
-    text-align: center;
-    font-size: 22px;
-    font-weight: 700;
-}
-
-.result-card img {
-    width: 72px;
-    height: 72px;
-    object-fit: cover;
-    border-radius: 10px;
-}
-
-.result-info .member-name {
-    font-weight: 700;
-}
-
-.result-meta {
-    color: var(--sub);
-    font-size: 12px;
-    margin-top: 4px;
-}
-
-.result-actions {
-    margin-top: 24px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-}
-
-.copyright {
-    margin-top: 32px;
-    color: #999;
-    font-size: 10px;
-    line-height: 1.6;
-}
-
-.tie-modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 100;
-    background: rgba(0,0,0,.45);
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-}
-
-.tie-modal.active {
-    display: flex;
-}
-
-.tie-box {
-    width: min(100%, 500px);
-    background: white;
-    border-radius: 20px;
-    padding: 24px;
-}
-
-.tie-box h3 {
-    margin-top: 0;
-}
-
-.tie-row {
-    width: 100%;
-    border: 1px solid var(--line);
-    background: white;
-    padding: 14px;
-    border-radius: 12px;
-    margin-top: 8px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-}
-
-@media (min-width: 650px) {
-    .prelim-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .main-choice-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .candidate-result-list {
-        grid-template-columns: repeat(6, minmax(0, 1fr));
-    }
-}
-
-@media (max-width: 420px) {
-    .matchup {
-        gap: 8px;
-    }
-
-    .card-info .member-name {
-        font-size: 14px;
-    }
-
-    .candidate-result-list {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
+:root{
+  --bg:#FEF9FB;
+  --card:#fff;
+  --text:#292929;
+  --sub:#8b8588;
+  --line:#e8e1e5;
+  --accent:#222;
+  --selected:#222;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Hiragino Kaku Gothic ProN",
+  "Yu Gothic",YuGothic,Arial,sans-serif}
+button{font:inherit}
+.screen{display:none;min-height:100vh;padding:24px 16px 48px}
+.screen.active{display:block}
+.container{width:min(100%,760px);margin:0 auto}
+.center-screen{display:none;min-height:100vh;align-items:center;justify-content:center;text-align:center}
+.center-screen.active{display:flex}
+.hero{width:min(100%,680px);padding:32px 20px}
+h1{font-size:clamp(29px,7vw,48px);line-height:1.35;letter-spacing:.03em;margin:0 0 18px}
+.subtitle{line-height:1.9;color:var(--sub);margin:0 0 30px}
+.primary,.secondary{border-radius:999px;padding:14px 28px;cursor:pointer;transition:.2s}
+.primary{border:0;background:var(--accent);color:#fff}
+.secondary{border:1px solid var(--line);background:#fff;color:var(--text)}
+.primary:hover,.secondary:hover{transform:translateY(-1px)}
+.explain{width:min(100%,680px);background:#fff;border:1px solid var(--line);border-radius:24px;padding:30px 24px;text-align:center}
+.explain h2{margin:0 0 18px;font-size:28px}
+.explain p{line-height:1.9;color:#555}
+.explain ul{text-align:left;line-height:1.9;padding-left:1.4em}
+header{text-align:center;margin-bottom:22px}
+.stage-name{font-size:12px;letter-spacing:.12em;color:var(--sub);margin-bottom:6px}
+.stage-title{font-size:26px;font-weight:700;line-height:1.4}
+.progress{font-size:13px;color:var(--sub);margin-top:6px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:16px;text-align:center;line-height:1.8}
+.prelim-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.prelim-card{border:2px solid transparent;border-radius:18px;background:#fff;padding:0 0 12px;overflow:hidden;cursor:pointer;text-align:center;color:var(--text);transition:.15s}
+.prelim-card.selected{border-color:var(--selected);box-shadow:0 0 0 3px rgba(0,0,0,.06)}
+.prelim-card img,.member-card img{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;background:#eee}
+.group{font-size:11px;color:var(--sub);margin-top:8px}
+.member-name{font-weight:700;margin-top:3px}
+.actions{display:flex;flex-direction:column;align-items:center;gap:9px;margin-top:20px}
+.hint{font-size:13px;color:var(--sub);text-align:center}
+.back{border:0;background:transparent;text-decoration:underline;color:#777;cursor:pointer;padding:6px}
+.back:disabled{opacity:.3;cursor:default}
+.candidate-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:20px 0}
+.candidate{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;text-align:center;padding-bottom:9px}
+.candidate img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
+.candidate div{font-size:13px;font-weight:700;margin-top:6px}
+.candidate small{font-size:10px;color:var(--sub)}
+.duel{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.member-card{border:2px solid transparent;border-radius:20px;background:#fff;padding:0 0 14px;overflow:hidden;cursor:pointer;text-align:center;color:var(--text);transition:.15s}
+.member-card:hover{border-color:#222}
+.member-card .group{margin-top:10px}
+.member-card .member-name{font-size:17px}
+.result-list{display:grid;gap:10px}
+.result-card{display:grid;grid-template-columns:48px 72px 1fr;gap:12px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:16px;padding:8px}
+.result-rank{text-align:center;font-size:22px;font-weight:700}
+.result-card img{width:72px;height:72px;border-radius:10px;object-fit:cover}
+.result-meta{font-size:12px;color:var(--sub);margin-top:4px}
+.result-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:24px}
+.note{font-size:10px;color:#999;line-height:1.7;margin-top:28px}
+@media(min-width:650px){
+  .prelim-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .candidate-grid{grid-template-columns:repeat(6,minmax(0,1fr))}
+}
+@media(max-width:420px){
+  .duel{gap:8px}
+  .member-card .member-name{font-size:14px}
 }
 </style>
 </head>
-
 <body>
 
-<!-- TOP -->
-<section id="startScreen" class="screen start-screen active">
-    <div class="start-inner">
-        <h1>HYBEナムドル<br>私の好き顔TOP9</h1>
-        <p class="subtitle">
-            HYBE所属男性アイドルの中から、<br>
-            あなたの「好きな顔」を選んでTOP9を決めよう。
-        </p>
-
-        <button id="startButton" class="primary-button">
-            START
-        </button>
-
-        <div class="copyright">
-            本サイト内における画像は著作権法第32条における「引用の目的正当な範囲」に則り使用しています。
-        </div>
-    </div>
+<section id="startScreen" class="screen center-screen active">
+  <div class="hero">
+    <h1>HYBE所属 ナムドル<br>わたしの好きな顔 TOP9</h1>
+    <p class="subtitle">HYBE所属男性アイドル57人の中から、<br>あなたの「好きな顔」TOP9を決めよう。</p>
+    <button id="startButton" class="primary">START</button>
+    <p class="note">本サイト内における画像は著作権法第32条における「引用の目的正当な範囲」に則り使用しています。</p>
+  </div>
 </section>
 
-<!-- 予選説明 -->
-<section id="prelimIntroScreen" class="screen explain-screen">
-    <div class="explain-box">
-        <h2>予選</h2>
-        <p>
-            まずは57人を4人または3人ずつのグループに分けます。
-        </p>
-        <p>
-            それぞれのグループから、<strong>好きな顔を0〜3人</strong>選んでください。
-        </p>
-        <p>
-            「ちょっと気になる」くらいでもOK。<br>
-            あなたの好きな顔候補を集めていきます。
-        </p>
-
-        <button id="startPreliminaryButton" class="primary-button">
-            予選をはじめる
-        </button>
-    </div>
+<section id="prelimIntroScreen" class="screen center-screen">
+  <div class="explain">
+    <h2>予選</h2>
+    <p>57人を4人または3人ずつのグループに分けます。</p>
+    <p>各グループから、<strong>0人〜全員</strong>を選んでください。<br>「この人好きかも」と思ったら気軽に選んでOK。</p>
+    <p>予選で<strong>9人以上</strong>の候補を集めて、本選へ進みます。</p>
+    <button id="startPrelim" class="primary">予選をはじめる</button>
+  </div>
 </section>
 
-<!-- 候補者結果 -->
 <section id="candidateResultScreen" class="screen">
-    <div class="container">
-        <header>
-            <div class="stage-name">PRELIMINARY RESULT</div>
-            <div class="stage-title">
-                好きな顔候補は<span id="candidateCount">0</span>人でした！
-            </div>
-        </header>
-
-        <p style="text-align:center;line-height:1.8;">
-            これより候補同士を直接比較する<br>
-            <strong>本選</strong>へ進みます。
-        </p>
-
-        <div id="candidateResultList" class="candidate-result-list"></div>
-
-        <div style="text-align:center;">
-            <button id="startMainButton" class="primary-button">
-                本選へ進む
-            </button>
-        </div>
-    </div>
+  <div class="container">
+    <header>
+      <div class="stage-name">PRELIMINARY RESULT</div>
+      <div class="stage-title">好きな顔候補は<span id="candidateCount">0</span>人でした！</div>
+    </header>
+    <div class="panel">これより候補同士をランダムな2択で比較する<br><strong>本選</strong>へ進みます。</div>
+    <div id="candidateGrid" class="candidate-grid"></div>
+    <div style="text-align:center"><button id="toMain" class="primary">本選へ進む</button></div>
+  </div>
 </section>
 
-<!-- 本選説明 -->
-<section id="mainIntroScreen" class="screen explain-screen">
-    <div class="explain-box">
-        <h2 id="mainIntroTitle">本選 ROUND 1</h2>
-
-        <p>
-            ここからは候補同士を直接比較します。
-        </p>
-
-        <p>
-            各グループで<br>
-            <strong>① 1番好き</strong><br>
-            <strong>② 次に好き</strong><br>
-            の順番で選んでください。
-        </p>
-
-        <p>
-            各グループの上位2人が、次のROUNDへ進みます。
-        </p>
-
-        <button id="startCurrentMainButton" class="primary-button">
-            ROUND 1をはじめる
-        </button>
-    </div>
+<section id="mainIntroScreen" class="screen center-screen">
+  <div class="explain">
+    <h2 id="mainIntroTitle">本選 ROUND 1</h2>
+    <p>ここからは、予選のグループ分けをいったん忘れて、候補同士をランダムに2人ずつ比較します。</p>
+    <p>表示された2人のうち、<strong>より好きな顔を1回タップするだけ</strong>。選んだ瞬間に次の対戦へ進みます。</p>
+    <p>ROUND 1〜3の<strong>勝利数をすべて蓄積</strong>し、3ROUND終了後に決勝進出者を決めます。</p>
+    <button id="startMainRound" class="primary">ROUND 1をはじめる</button>
+  </div>
 </section>
 
-<!-- 決勝説明 -->
-<section id="finalIntroScreen" class="screen explain-screen">
-    <div class="explain-box">
-        <h2>決勝戦</h2>
-
-        <p>
-            ここまで勝ち上がったメンバーを<br>
-            2択で直接比較していきます。
-        </p>
-
-        <p>
-            <strong>より好きな顔</strong>をタップしてください。
-        </p>
-
-        <p>
-            TOP9が決まった時点で終了です。
-        </p>
-
-        <button id="startFinalButton" class="primary-button">
-            決勝戦をはじめる
-        </button>
-    </div>
+<section id="finalIntroScreen" class="screen center-screen">
+  <div class="explain">
+    <h2>決勝戦</h2>
+    <p>本選を勝ち抜いた決勝候補を、最後にもう一度2択で比較します。</p>
+    <p>より好きな顔をタップすると、すぐ次の対戦へ進みます。</p>
+    <p>決勝の勝利数も加味して、あなたの<strong>好きな顔TOP9</strong>を決定します。</p>
+    <button id="startFinal" class="primary">決勝戦をはじめる</button>
+  </div>
 </section>
 
-<!-- GAME -->
 <section id="gameScreen" class="screen">
-    <div class="container">
-        <header>
-            <div id="stageName" class="stage-name"></div>
-            <div id="stageTitle" class="stage-title"></div>
-            <div id="progress" class="progress"></div>
-        </header>
-
-        <div id="gameContent" class="game-content"></div>
-
-        <div class="game-actions">
-            <div id="gameHint" class="game-hint"></div>
-
-            <button id="gameNextButton" class="primary-button">
-                次へ
-            </button>
-
-            <button id="back-match-btn" class="back-match-btn" type="button">
-                ひとつ前にもどる
-            </button>
-        </div>
+  <div class="container">
+    <header>
+      <div id="stageName" class="stage-name"></div>
+      <div id="stageTitle" class="stage-title"></div>
+      <div id="progress" class="progress"></div>
+    </header>
+    <div id="gameContent"></div>
+    <div class="actions">
+      <div id="gameHint" class="hint"></div>
+      <button id="backButton" class="back" type="button">ひとつ前にもどる</button>
     </div>
+  </div>
 </section>
 
-<!-- RESULT -->
 <section id="resultScreen" class="screen">
-    <div class="container">
-        <header>
-            <div class="stage-name">RESULT</div>
-            <div class="stage-title">あなたの好き顔TOP9</div>
-        </header>
-
-        <div id="resultList" class="result-list"></div>
-
-        <div class="result-actions">
-            <button id="shareXButton" class="primary-button">
-                Xで結果をシェア
-            </button>
-
-            <button id="copyResultButton" class="secondary-button">
-                結果をテキストでコピー
-            </button>
-
-            <button id="retryButton" class="secondary-button">
-                もう一度やる
-            </button>
-        </div>
+  <div class="container">
+    <header>
+      <div class="stage-name">RESULT</div>
+      <div class="stage-title">あなたの好きな顔 TOP9</div>
+    </header>
+    <div id="resultList" class="result-list"></div>
+    <div class="result-actions">
+      <button id="shareX" class="primary">Xで結果をシェア</button>
+      <button id="copyResult" class="secondary">結果をテキストでコピー</button>
+      <button id="retry" class="secondary">もう一度やる</button>
     </div>
+  </div>
 </section>
-
-<!-- タイブレーク -->
-<div id="tieModal" class="tie-modal">
-    <div class="tie-box">
-        <h3 id="tieTitle">タイブレーク</h3>
-        <p id="tieText"></p>
-
-        <div id="tieList"></div>
-
-        <button id="tieContinue" class="secondary-button" type="button">
-            閉じる
-        </button>
-    </div>
-</div>
 
 <script>
-
-const $ = id => document.getElementById(id);
-
-/* =========================
-   メンバー
-========================= */
-
 const members = [
-    // BTS
-    { group: "BTS", name: "RM", image: "images/rm.jpg" },
-    { group: "BTS", name: "Jin", image: "images/jin.jpg" },
-    { group: "BTS", name: "SUGA", image: "images/suga.jpg" },
-    { group: "BTS", name: "j-hope", image: "images/jhope.jpg" },
-    { group: "BTS", name: "Jimin", image: "images/jimin.jpg" },
-    { group: "BTS", name: "V", image: "images/v.jpg" },
-    { group: "BTS", name: "Jung Kook", image: "images/jungkook.jpg" },
-
-    // SEVENTEEN
-    { group: "SEVENTEEN", name: "S.COUPS", image: "images/scoups.jpg" },
-    { group: "SEVENTEEN", name: "JEONGHAN", image: "images/jeonghan.jpg" },
-    { group: "SEVENTEEN", name: "JOSHUA", image: "images/joshua.jpg" },
-    { group: "SEVENTEEN", name: "JUN", image: "images/jun.jpg" },
-    { group: "SEVENTEEN", name: "HOSHI", image: "images/hoshi.jpg" },
-    { group: "SEVENTEEN", name: "WONWOO", image: "images/wonwoo.jpg" },
-    { group: "SEVENTEEN", name: "WOOZI", image: "images/woozi.jpg" },
-    { group: "SEVENTEEN", name: "THE 8", image: "images/the8.jpg" },
-    { group: "SEVENTEEN", name: "MINGYU", image: "images/mingyu.jpg" },
-    { group: "SEVENTEEN", name: "DK", image: "images/dk.jpg" },
-    { group: "SEVENTEEN", name: "SEUNGKWAN", image: "images/seungkwan.jpg" },
-    { group: "SEVENTEEN", name: "VERNON", image: "images/vernon.jpg" },
-    { group: "SEVENTEEN", name: "DINO", image: "images/dino.jpg" },
-
-    // TXT
-    { group: "TXT", name: "SOOBIN", image: "images/soobin.jpg" },
-    { group: "TXT", name: "YEONJUN", image: "images/yeonjun.jpg" },
-    { group: "TXT", name: "BEOMGYU", image: "images/beomgyu.jpg" },
-    { group: "TXT", name: "TAEHYUN", image: "images/taehyun.jpg" },
-    { group: "TXT", name: "HUENINGKAI", image: "images/hueningkai.jpg" },
-
-    // ENHYPEN
-    { group: "ENHYPEN", name: "JUNGWON", image: "images/jungwon.jpg" },
-    { group: "ENHYPEN", name: "JAY", image: "images/jay.jpg" },
-    { group: "ENHYPEN", name: "JAKE", image: "images/jake.jpg" },
-    { group: "ENHYPEN", name: "SUNGHOON", image: "images/sunghoon.jpg" },
-    { group: "ENHYPEN", name: "SUNOO", image: "images/sunoo.jpg" },
-    { group: "ENHYPEN", name: "NI-KI", image: "images/niki.jpg" },
-
-    // &TEAM
-    { group: "&TEAM", name: "K", image: "images/k.jpg" },
-    { group: "&TEAM", name: "FUMA", image: "images/fuma.jpg" },
-    { group: "&TEAM", name: "NICHOLAS", image: "images/nicholas.jpg" },
-    { group: "&TEAM", name: "EJ", image: "images/ej.jpg" },
-    { group: "&TEAM", name: "YUMA", image: "images/yuma.jpg" },
-    { group: "&TEAM", name: "JO", image: "images/jo.jpg" },
-    { group: "&TEAM", name: "HARUA", image: "images/harua.jpg" },
-    { group: "&TEAM", name: "TAKI", image: "images/taki.jpg" },
-    { group: "&TEAM", name: "MAKI", image: "images/maki.jpg" },
-
-    // BOYNEXTDOOR
-    { group: "BOYNEXTDOOR", name: "SUNGHO", image: "images/sungho.jpg" },
-    { group: "BOYNEXTDOOR", name: "RIWOO", image: "images/riwoo.jpg" },
-    { group: "BOYNEXTDOOR", name: "JAEHYUN", image: "images/jaehyun.jpg" },
-    { group: "BOYNEXTDOOR", name: "TAESAN", image: "images/taesan.jpg" },
-    { group: "BOYNEXTDOOR", name: "LEEHAN", image: "images/leehan.jpg" },
-    { group: "BOYNEXTDOOR", name: "WOONHAK", image: "images/woonhak.jpg" },
-
-    // TWS
-    { group: "TWS", name: "SHINYU", image: "images/shinyu.jpg" },
-    { group: "TWS", name: "DOHOON", image: "images/dohoon.jpg" },
-    { group: "TWS", name: "YOUNGJAE", image: "images/youngjae.jpg" },
-    { group: "TWS", name: "HANJIN", image: "images/hanjin.jpg" },
-    { group: "TWS", name: "JIHOON", image: "images/jihoon.jpg" },
-    { group: "TWS", name: "KYUNGMIN", image: "images/kyungmin.jpg" },
-
-    // CORTIS
-    { group: "CORTIS", name: "MARTIN", image: "images/martin.jpg" },
-    { group: "CORTIS", name: "JAMES", image: "images/james.jpg" },
-    { group: "CORTIS", name: "JUHOON", image: "images/juhoon.jpg" },
-    { group: "CORTIS", name: "SEONGHYEON", image: "images/seonghyeon.jpg" },
-    { group: "CORTIS", name: "KEONHO", image: "images/keonho.jpg" }
+  {group:"BTS",name:"RM",image:"images/rm.jpg"},
+  {group:"BTS",name:"Jin",image:"images/jin.jpg"},
+  {group:"BTS",name:"SUGA",image:"images/suga.jpg"},
+  {group:"BTS",name:"j-hope",image:"images/jhope.jpg"},
+  {group:"BTS",name:"Jimin",image:"images/jimin.jpg"},
+  {group:"BTS",name:"V",image:"images/v.jpg"},
+  {group:"BTS",name:"Jung Kook",image:"images/jungkook.jpg"},
+  {group:"SEVENTEEN",name:"S.COUPS",image:"images/scoups.jpg"},
+  {group:"SEVENTEEN",name:"JEONGHAN",image:"images/jeonghan.jpg"},
+  {group:"SEVENTEEN",name:"JOSHUA",image:"images/joshua.jpg"},
+  {group:"SEVENTEEN",name:"JUN",image:"images/jun.jpg"},
+  {group:"SEVENTEEN",name:"HOSHI",image:"images/hoshi.jpg"},
+  {group:"SEVENTEEN",name:"WONWOO",image:"images/wonwoo.jpg"},
+  {group:"SEVENTEEN",name:"WOOZI",image:"images/woozi.jpg"},
+  {group:"SEVENTEEN",name:"THE 8",image:"images/the8.jpg"},
+  {group:"SEVENTEEN",name:"MINGYU",image:"images/mingyu.jpg"},
+  {group:"SEVENTEEN",name:"DK",image:"images/dk.jpg"},
+  {group:"SEVENTEEN",name:"SEUNGKWAN",image:"images/seungkwan.jpg"},
+  {group:"SEVENTEEN",name:"VERNON",image:"images/vernon.jpg"},
+  {group:"SEVENTEEN",name:"DINO",image:"images/dino.jpg"},
+  {group:"TXT",name:"SOOBIN",image:"images/soobin.jpg"},
+  {group:"TXT",name:"YEONJUN",image:"images/yeonjun.jpg"},
+  {group:"TXT",name:"BEOMGYU",image:"images/beomgyu.jpg"},
+  {group:"TXT",name:"TAEHYUN",image:"images/taehyun.jpg"},
+  {group:"TXT",name:"HUENINGKAI",image:"images/hueningkai.jpg"},
+  {group:"ENHYPEN",name:"JUNGWON",image:"images/jungwon.jpg"},
+  {group:"ENHYPEN",name:"JAY",image:"images/jay.jpg"},
+  {group:"ENHYPEN",name:"JAKE",image:"images/jake.jpg"},
+  {group:"ENHYPEN",name:"SUNGHOON",image:"images/sunghoon.jpg"},
+  {group:"ENHYPEN",name:"SUNOO",image:"images/sunoo.jpg"},
+  {group:"ENHYPEN",name:"NI-KI",image:"images/niki.jpg"},
+  {group:"&TEAM",name:"K",image:"images/k.jpg"},
+  {group:"&TEAM",name:"FUMA",image:"images/fuma.jpg"},
+  {group:"&TEAM",name:"NICHOLAS",image:"images/nicholas.jpg"},
+  {group:"&TEAM",name:"EJ",image:"images/ej.jpg"},
+  {group:"&TEAM",name:"YUMA",image:"images/yuma.jpg"},
+  {group:"&TEAM",name:"JO",image:"images/jo.jpg"},
+  {group:"&TEAM",name:"HARUA",image:"images/harua.jpg"},
+  {group:"&TEAM",name:"TAKI",image:"images/taki.jpg"},
+  {group:"&TEAM",name:"MAKI",image:"images/maki.jpg"},
+  {group:"BOYNEXTDOOR",name:"SUNGHO",image:"images/sungho.jpg"},
+  {group:"BOYNEXTDOOR",name:"RIWOO",image:"images/riwoo.jpg"},
+  {group:"BOYNEXTDOOR",name:"JAEHYUN",image:"images/jaehyun.jpg"},
+  {group:"BOYNEXTDOOR",name:"TAESAN",image:"images/taesan.jpg"},
+  {group:"BOYNEXTDOOR",name:"LEEHAN",image:"images/leehan.jpg"},
+  {group:"BOYNEXTDOOR",name:"WOONHAK",image:"images/woonhak.jpg"},
+  {group:"TWS",name:"SHINYU",image:"images/shinyu.jpg"},
+  {group:"TWS",name:"DOHOON",image:"images/dohoon.jpg"},
+  {group:"TWS",name:"YOUNGJAE",image:"images/youngjae.jpg"},
+  {group:"TWS",name:"HANJIN",image:"images/hanjin.jpg"},
+  {group:"TWS",name:"JIHOON",image:"images/jihoon.jpg"},
+  {group:"TWS",name:"KYUNGMIN",image:"images/kyungmin.jpg"},
+  {group:"CORTIS",name:"MARTIN",image:"images/martin.jpg"},
+  {group:"CORTIS",name:"JAMES",image:"images/james.jpg"},
+  {group:"CORTIS",name:"JUHOON",image:"images/juhoon.jpg"},
+  {group:"CORTIS",name:"SEONGHYEON",image:"images/seonghyeon.jpg"},
+  {group:"CORTIS",name:"KEONHO",image:"images/keonho.jpg"}
 ];
 
-const stageConfig = {
-    1: {
-        name: "予選",
-        title: "好きな顔を選ぼう"
-    },
-    2: {
-        name: "本選 ROUND 1",
-        title: "1番好き → 次に好き"
-    },
-    3: {
-        name: "本選 ROUND 2",
-        title: "1番好き → 次に好き"
-    },
-    4: {
-        name: "本選 ROUND 3",
-        title: "1番好き → 次に好き"
-    },
-    5: {
-        name: "決勝戦",
-        title: "より好きな顔を選んでください"
+let stage=0;
+let prelimGroups=[];
+let prelimIndex=0;
+let prelimSelected=[];
+let participants=[];
+let wins=new Map();
+
+let roundMatches=[];
+let roundIndex=0;
+let mainRound=1;
+
+let finalists=[];
+let finalWins=new Map();
+let finalMatches=[];
+let finalIndex=0;
+
+let resultRanking=[];
+let stateHistory=[];
+
+const $=id=>document.getElementById(id);
+
+function shuffle(a){
+  return [...a].sort(()=>Math.random()-0.5);
+}
+
+function show(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  $(id).classList.add("active");
+}
+
+function cloneState(){
+  return {
+    stage,
+    prelimGroups:prelimGroups.map(g=>[...g]),
+    prelimIndex,
+    prelimSelected:[...prelimSelected],
+    participants:[...participants],
+    wins:[...wins.entries()],
+    roundMatches:roundMatches.map(m=>[...m]),
+    roundIndex,
+    mainRound,
+    finalists:[...finalists],
+    finalWins:[...finalWins.entries()],
+    finalMatches:finalMatches.map(m=>[...m]),
+    finalIndex,
+    resultRanking:[...resultRanking]
+  };
+}
+
+function restoreState(s){
+  stage=s.stage;
+  prelimGroups=s.prelimGroups.map(g=>[...g]);
+  prelimIndex=s.prelimIndex;
+  prelimSelected=[...s.prelimSelected];
+  participants=[...s.participants];
+  wins=new Map(s.wins);
+  roundMatches=s.roundMatches.map(m=>[...m]);
+  roundIndex=s.roundIndex;
+  mainRound=s.mainRound;
+  finalists=[...s.finalists];
+  finalWins=new Map(s.finalWins);
+  finalMatches=s.finalMatches.map(m=>[...m]);
+  finalIndex=s.finalIndex;
+  resultRanking=[...s.resultRanking];
+
+  if(stage===1) renderPrelim();
+  else if(stage===2||stage===3||stage===4) renderMainDuel();
+  else if(stage===5) renderFinal();
+}
+
+function startPreliminary(){
+  stage=1;
+  prelimGroups=makePrelimGroups();
+  prelimIndex=0;
+  prelimSelected=[];
+  stateHistory=[];
+  renderPrelim();
+  show("gameScreen");
+}
+
+function makePrelimGroups(){
+  const p=shuffle(members);
+  const groups=[];
+  let i=0;
+  for(let n=0;n<12;n++){groups.push(p.slice(i,i+4));i+=4;}
+  for(let n=0;n<3;n++){groups.push(p.slice(i,i+3));i+=3;}
+  return groups;
+}
+
+function renderPrelim(){
+  const group=prelimGroups[prelimIndex];
+  $("stageName").textContent="予選";
+  $("stageTitle").textContent="好きな顔を選ぼう";
+  $("progress").textContent=`${prelimIndex+1} / ${prelimGroups.length}`;
+  $("gameHint").textContent="好きな顔をタップして選択。0人〜全員選べます。";
+
+  const content=$("gameContent");
+  content.innerHTML=`
+    <div class="panel">このグループでは、<strong>0〜${group.length}人</strong>まで選べます。</div>
+    <div class="prelim-grid" id="prelimGrid"></div>
+    <div class="actions">
+      <button id="prelimNext" class="primary">${prelimIndex===prelimGroups.length-1?"予選を終了":"次へ"}</button>
+    </div>
+  `;
+
+  const grid=$("prelimGrid");
+  group.forEach((m,i)=>{
+    const b=document.createElement("button");
+    b.type="button";
+    b.className="prelim-card";
+    b.innerHTML=`<img src="${m.image}" alt="${m.group} ${m.name}"><div class="group">${m.group}</div><div class="member-name">${m.name}</div>`;
+    b.addEventListener("click",()=>b.classList.toggle("selected"));
+    grid.appendChild(b);
+  });
+
+  $("prelimNext").onclick=finishPrelimGroup;
+  $("backButton").disabled=prelimIndex===0;
+}
+
+function finishPrelimGroup(){
+  stateHistory.push(cloneState());
+  const group=prelimGroups[prelimIndex];
+  const cards=[...document.querySelectorAll("#prelimGrid .prelim-card")];
+  const chosen=cards.map((c,i)=>c.classList.contains("selected")?group[i]:null).filter(Boolean);
+  prelimSelected.push(...chosen);
+
+  if(prelimIndex<prelimGroups.length-1){
+    prelimIndex++;
+    renderPrelim();
+    return;
+  }
+
+  if(prelimSelected.length<9){
+    stateHistory=[];
+    alert(`現在の候補は${prelimSelected.length}人です。TOP9を決めるため、予選で9人以上選んでください。もう一度予選をやり直します。`);
+    startPreliminary();
+    return;
+  }
+
+  participants=shuffle(prelimSelected);
+  $("candidateCount").textContent=participants.length;
+  $("candidateGrid").innerHTML=participants.map(m=>`
+    <div class="candidate">
+      <img src="${m.image}" alt="${m.group} ${m.name}">
+      <div>${m.name}</div>
+      <small>${m.group}</small>
+    </div>
+  `).join("");
+  show("candidateResultScreen");
+}
+
+function startMain(){
+  mainRound=1;
+  wins=new Map(participants.map(m=>[m.name,0]));
+  startMainRound();
+}
+
+function startMainRound(){
+  stage=mainRound+1;
+  roundIndex=0;
+  roundWins=0;
+  roundMatches=makeDuelPairs(participants);
+  renderMainDuel();
+  show("gameScreen");
+}
+
+function makeDuelPairs(list){
+  const p=shuffle(list);
+  const pairs=[];
+  while(p.length>=2) pairs.push([p.pop(),p.pop()]);
+  if(p.length===1) pairs.push([p[0],null]);
+  return pairs;
+}
+
+function renderMainDuel(){
+  $("stageName").textContent=`本選 ROUND ${mainRound}`;
+  $("stageTitle").textContent="より好きな顔を選んでください";
+  $("progress").textContent=`${roundIndex+1} / ${roundMatches.length}`;
+
+  const pair=roundMatches[roundIndex];
+  if(!pair) return;
+
+  if(pair[1]===null){
+    // 奇数人数のときは1人だけ不戦勝。勝利数はそのまま。
+    $("gameContent").innerHTML=`
+      <div class="panel"><strong>${pair[0].name}</strong> は今回のROUNDでは不戦勝です。</div>
+    `;
+    $("gameHint").textContent="次の対戦へ進みます。";
+    setTimeout(()=>advanceMainDuel(pair[0]),650);
+    return;
+  }
+
+  $("gameHint").textContent="より好きな顔をタップすると、すぐ次の対戦へ進みます。";
+  $("gameContent").innerHTML=`
+    <div class="duel">
+      ${duelCard(pair[0],0)}
+      ${duelCard(pair[1],1)}
+    </div>
+  `;
+  $("duel0").onclick=()=>chooseMain(pair[0]);
+  $("duel1").onclick=()=>chooseMain(pair[1]);
+}
+
+function duelCard(m,i){
+  return `<button id="duel${i}" class="member-card" type="button">
+    <img src="${m.image}" alt="${m.group} ${m.name}">
+    <div class="group">${m.group}</div>
+    <div class="member-name">${m.name}</div>
+  </button>`;
+}
+
+function chooseMain(winner){
+  // 二重タップ防止
+  document.querySelectorAll(".member-card").forEach(b=>b.disabled=true);
+  wins.set(winner.name,(wins.get(winner.name)||0)+1);
+  roundWins++;
+  advanceMainDuel(winner);
+}
+
+function advanceMainDuel(){
+  if(roundIndex<roundMatches.length-1){
+    roundIndex++;
+    renderMainDuel();
+    return;
+  }
+
+  if(mainRound<3){
+    mainRound++;
+    stateHistory=[];
+    startMainRound();
+    return;
+  }
+
+  finishMainRounds();
+}
+
+function finishMainRounds(){
+  // 3ROUNDの蓄積勝利数で並べる。
+  const sorted=shuffle(participants).sort((a,b)=>(wins.get(b.name)||0)-(wins.get(a.name)||0));
+
+  // 決勝候補は原則12人。参加者が12人未満なら全員。
+  const target=Math.min(12,sorted.length);
+
+  // 12位が同勝利数で複数いる場合、必要な人数を超えた同点者は追加の2択で決定。
+  const cutoffWins=wins.get(sorted[target-1].name)||0;
+  const above=sorted.filter(m=>(wins.get(m.name)||0)>cutoffWins);
+  let tied=sorted.filter(m=>(wins.get(m.name)||0)===cutoffWins);
+
+  if(above.length<target && tied.length>target-above.length){
+    resolveCutoffTies(above,tied,target);
+    return;
+  }
+
+  finalists=sorted.slice(0,target);
+  showFinalIntro();
+}
+
+function resolveCutoffTies(above,tied,target){
+  let pool=shuffle(tied);
+  const need=target-above.length;
+  const selected=[];
+
+  const pickNext=()=>{
+    if(selected.length>=need){
+      finalists=[...above,...selected];
+      showFinalIntro();
+      return;
     }
+    if(pool.length===1){
+      selected.push(pool.shift());
+      pickNext();
+      return;
+    }
+    const pair=[pool.shift(),pool.shift()];
+    $("stageName").textContent="本選 タイブレーク";
+    $("stageTitle").textContent="同点のため2択で決定";
+    $("progress").textContent=`${selected.length+1} / ${need}`;
+    $("gameHint").textContent="より好きな顔をタップしてください。";
+    $("gameContent").innerHTML=`<div class="duel">${duelCard(pair[0],0)}${duelCard(pair[1],1)}</div>`;
+    $("duel0").onclick=()=>{selected.push(pair[0]);pickNext()};
+    $("duel1").onclick=()=>{selected.push(pair[1]);pickNext()};
+  };
+  show("gameScreen");
+  pickNext();
+}
+
+function showFinalIntro(){
+  show("finalIntroScreen");
+}
+
+function startFinal(){
+  stage=5;
+  finalWins=new Map(finalists.map(m=>[m.name,0]));
+  // 各決勝候補に3回ずつ、別の相手との比較機会を作る。
+  finalMatches=makeFinalSchedule(finalists,3);
+  finalIndex=0;
+  renderFinal();
+  show("gameScreen");
+}
+
+function makeFinalSchedule(list,rounds){
+  const matches=[];
+  for(let r=0;r<rounds;r++){
+    const pairs=makeDuelPairs(list);
+    pairs.forEach(p=>matches.push(p));
+  }
+  return matches;
+}
+
+function renderFinal(){
+  if(finalIndex>=finalMatches.length){
+    finishFinal();
+    return;
+  }
+
+  const pair=finalMatches[finalIndex];
+  if(!pair[1]){
+    finalIndex++;
+    renderFinal();
+    return;
+  }
+
+  $("stageName").textContent="決勝戦";
+  $("stageTitle").textContent="より好きな顔を選んでください";
+  $("progress").textContent=`${finalIndex+1} / ${finalMatches.length}`;
+  $("gameHint").textContent="好きな方をタップすると、すぐ次の対戦へ進みます。";
+  $("gameContent").innerHTML=`<div class="duel">${duelCard(pair[0],0)}${duelCard(pair[1],1)}</div>`;
+  $("duel0").onclick=()=>chooseFinal(pair[0]);
+  $("duel1").onclick=()=>chooseFinal(pair[1]);
+}
+
+function chooseFinal(winner){
+  document.querySelectorAll(".member-card").forEach(b=>b.disabled=true);
+  finalWins.set(winner.name,(finalWins.get(winner.name)||0)+1);
+  finalIndex++;
+  setTimeout(renderFinal,80);
+}
+
+function finishFinal(){
+  const ranking=shuffle(finalists).sort((a,b)=>{
+    const aw=(wins.get(a.name)||0)+(finalWins.get(a.name)||0);
+    const bw=(wins.get(b.name)||0)+(finalWins.get(b.name)||0);
+    if(bw!==aw) return bw-aw;
+    return (finalWins.get(b.name)||0)-(finalWins.get(a.name)||0);
+  });
+  resultRanking=ranking.slice(0,9);
+  renderResult();
+  show("resultScreen");
+}
+
+function renderResult(){
+  $("resultList").innerHTML=resultRanking.map((m,i)=>{
+    const total=(wins.get(m.name)||0)+(finalWins.get(m.name)||0);
+    return `<div class="result-card">
+      <div class="result-rank">${i+1}</div>
+      <img src="${m.image}" alt="${m.group} ${m.name}">
+      <div><div class="member-name">${m.name}</div><div class="result-meta">${m.group}　｜　本選 ${wins.get(m.name)||0}勝　決勝 ${finalWins.get(m.name)||0}勝</div></div>
+    </div>`;
+  }).join("");
+  try{localStorage.setItem("hybeSukigaoTop9",JSON.stringify(resultRanking));}catch(e){}
+}
+
+function resultText(){
+  return "HYBE所属 ナムドル\\nわたしの好きな顔 TOP9\\n\\n"+
+    resultRanking.map((m,i)=>`${i+1}位　${m.name}（${m.group}）`).join("\\n");
+}
+
+$("startButton").onclick=()=>show("prelimIntroScreen");
+$("startPrelim").onclick=startPreliminary;
+$("toMain").onclick=()=>{
+  $("mainIntroTitle").textContent="本選 ROUND 1";
+  $("startMainRound").textContent="ROUND 1をはじめる";
+  show("mainIntroScreen");
+};
+$("startMainRound").onclick=startMain;
+$("startFinal").onclick=startFinal;
+$("retry").onclick=()=>{
+  stateHistory=[];
+  show("prelimIntroScreen");
+};
+$("copyResult").onclick=async()=>{
+  try{await navigator.clipboard.writeText(resultText());alert("結果をコピーしました！");}
+  catch(e){alert("コピーできませんでした。");}
+};
+$("shareX").onclick=()=>{
+  const url="https://twitter.com/intent/tweet?text="+encodeURIComponent(resultText()+"\\n\\n#HYBEナムドル好き顔TOP9");
+  window.open(url,"_blank");
 };
 
-/* =========================
-   状態
-========================= */
-
-let stage = 0;
-let stageParticipants = [];
-let matches = [];
-let matchIndex = 0;
-let stageWins = new Map();
-
-let finalSelected = new Set();
-let finalChallenger = null;
-let finalOpponent = null;
-let currentPair = null;
-
-let mainFirstChoice = null;
-let mainSecondChoice = null;
-
-let matchHistory = [];
-
-/* =========================
-   共通
-========================= */
-
-function shuffle(array) {
-    return [...array].sort(() => Math.random() - 0.5);
-}
-
-function showScreen(screen) {
-    [
-        $("startScreen"),
-        $("prelimIntroScreen"),
-        $("candidateResultScreen"),
-        $("mainIntroScreen"),
-        $("finalIntroScreen"),
-        $("gameScreen"),
-        $("resultScreen")
-    ].forEach(s => s.classList.remove("active"));
-
-    screen.classList.add("active");
-}
-
-function snapshotGameState() {
-    return {
-        stage,
-        matches: matches.map(group => [...group]),
-        matchIndex,
-        stageParticipants: [...stageParticipants],
-        stageWins: [...stageWins.entries()],
-        finalSelected: [...finalSelected],
-        finalChallenger,
-        finalOpponent,
-        currentPair: currentPair ? [...currentPair] : null
-    };
-}
-
-function restoreGameState(snapshot) {
-    if (!snapshot) return;
-
-    stage = snapshot.stage;
-    matches = snapshot.matches.map(group => [...group]);
-    matchIndex = snapshot.matchIndex;
-    stageParticipants = [...snapshot.stageParticipants];
-    stageWins = new Map(snapshot.stageWins);
-
-    finalSelected = new Set(snapshot.finalSelected || []);
-    finalChallenger = snapshot.finalChallenger || null;
-    finalOpponent = snapshot.finalOpponent || null;
-    currentPair = snapshot.currentPair || null;
-
-    if (stage === 1) {
-        showPreliminaryGroup();
-    } else if (stage >= 2 && stage <= 4) {
-        showMainRoundGroup();
-    } else if (stage === 5) {
-        showFinalMatch();
-    }
-}
-
-/* =========================
-   ゲーム開始
-========================= */
-
-function startGame() {
-    stage = 1;
-    matchHistory = [];
-    stageParticipants = shuffle([...members]);
-    beginStage();
-}
-
-function beginStage() {
-    matchIndex = 0;
-    stageWins = new Map();
-
-    if (stage === 1) {
-        matches = makePreliminaryGroups(stageParticipants);
-
-        $("stageName").textContent = stageConfig[1].name;
-        $("stageTitle").textContent = stageConfig[1].title;
-
-        showScreen($("gameScreen"));
-        showPreliminaryGroup();
-        return;
-    }
-
-    if (stage === 2 || stage === 3 || stage === 4) {
-        matches = makeMainRoundGroups(stageParticipants);
-
-        $("stageName").textContent = stageConfig[stage].name;
-        $("stageTitle").textContent = stageConfig[stage].title;
-
-        showScreen($("gameScreen"));
-        showMainRoundGroup();
-        return;
-    }
-
-    if (stage === 5) {
-        finalSelected = new Set();
-        finalChallenger = null;
-        finalOpponent = null;
-        currentPair = null;
-
-        matches = makeFinalMatches(stageParticipants);
-
-        $("stageName").textContent = stageConfig[5].name;
-        $("stageTitle").textContent = stageConfig[5].title;
-
-        showScreen($("gameScreen"));
-        showFinalMatch();
-    }
-}
-
-/* =========================
-   予選
-========================= */
-
-function makePreliminaryGroups(participants) {
-    const p = shuffle(participants);
-    const groups = [];
-
-    /*
-     * 57人
-     * 4人 × 12組 = 48人
-     * 3人 × 3組 = 9人
-     * 合計57人
-     */
-
-    let index = 0;
-
-    for (let i = 0; i < 12; i++) {
-        groups.push(p.slice(index, index + 4));
-        index += 4;
-    }
-
-    for (let i = 0; i < 3; i++) {
-        groups.push(p.slice(index, index + 3));
-        index += 3;
-    }
-
-    return groups;
-}
-
-function renderPrelimCards(group) {
-
-    const content = $("gameContent");
-
-    content.innerHTML = `
-        <div class="round-group-title">
-            このグループから、<strong>好きな顔を0〜3人</strong>選んでください。
-        </div>
-
-        <div class="prelim-grid" id="prelimGrid"></div>
-    `;
-
-    const grid = $("prelimGrid");
-
-    group.forEach((member, index) => {
-
-        const card = document.createElement("button");
-
-        card.type = "button";
-        card.className = "prelim-card";
-        card.dataset.index = index;
-
-        card.innerHTML = `
-            <img
-                src="${member.image}"
-                alt="${member.group} ${member.name}"
-                onerror="this.style.opacity='0.25';"
-            >
-            <div class="group">${member.group}</div>
-            <div class="member-name">${member.name}</div>
-        `;
-
-        card.addEventListener("click", () => {
-
-            if (card.classList.contains("selected")) {
-                card.classList.remove("selected");
-                return;
-            }
-
-            const selectedCount =
-                grid.querySelectorAll(".prelim-card.selected").length;
-
-            if (selectedCount >= 3) {
-                return;
-            }
-
-            card.classList.add("selected");
-        });
-
-        grid.appendChild(card);
-    });
-
-    $("gameHint").textContent =
-        "写真をタップして選択できます。最大3人まで。";
-
-    const next = $("gameNextButton");
-
-    next.style.display = "block";
-
-    next.textContent =
-        matchIndex === matches.length - 1
-            ? "予選を終了"
-            : "次へ";
-
-    next.onclick = finishPreliminaryGroup;
-}
-
-function showPreliminaryGroup() {
-
-    const group = matches[matchIndex];
-
-    if (!group) return;
-
-    $("progress").textContent =
-        `${matchIndex + 1} / ${matches.length}`;
-
-    renderPrelimCards(group);
-
-    $("back-match-btn").disabled =
-        matchIndex === 0;
-}
-
-function finishPreliminaryGroup() {
-
-    const group = matches[matchIndex];
-
-    const selected =
-        [...document.querySelectorAll(
-            "#prelimGrid .prelim-card.selected"
-        )]
-        .map(card =>
-            group[Number(card.dataset.index)]
-        );
-
-    stageWins.set(
-        `prelim-${matchIndex}`,
-        selected
-    );
-
-    if (matchIndex < matches.length - 1) {
-
-        matchHistory.push(
-            snapshotGameState()
-        );
-
-        matchIndex++;
-
-        showPreliminaryGroup();
-
-        return;
-    }
-
-    const candidates = [];
-
-    for (let i = 0; i < matches.length; i++) {
-
-        const groupCandidates =
-            stageWins.get(`prelim-${i}`) || [];
-
-        candidates.push(
-            ...groupCandidates
-        );
-    }
-
-    /*
-     * 予選で1人も選ばなかった場合、
-     * ランダムで勝ち上がらせるのではなく、
-     * ユーザーに選択を促す。
-     */
-
-    if (candidates.length === 0) {
-
-        alert(
-            "少なくとも1人は好きな顔を選んでください。"
-        );
-
-        matchIndex = matches.length - 1;
-
-        showPreliminaryGroup();
-
-        return;
-    }
-
-    stageParticipants = candidates;
-
-    $("candidateCount").textContent =
-        candidates.length;
-
-    const list =
-        $("candidateResultList");
-
-    list.innerHTML = "";
-
-    candidates.forEach(member => {
-
-        const el =
-            document.createElement("div");
-
-        el.className =
-            "candidate-result-item";
-
-        el.innerHTML = `
-            <img
-                src="${member.image}"
-                alt="${member.group} ${member.name}"
-            >
-            <div>${member.name}</div>
-            <small>${member.group}</small>
-        `;
-
-        list.appendChild(el);
-    });
-
-    showScreen(
-        $("candidateResultScreen")
-    );
-}
-
-/* =========================
-   本選
-========================= */
-
-function makeMainRoundGroups(participants) {
-
-    const p = shuffle(participants);
-    const groups = [];
-
-    let i = 0;
-
-    while (i < p.length) {
-
-        const remaining =
-            p.length - i;
-
-        let size;
-
-        /*
-         * 1人だけのグループを作らない。
-         */
-
-        if (remaining === 5) {
-            size = 3;
-        } else if (remaining === 2 || remaining === 3 || remaining === 4) {
-            size = remaining;
-        } else {
-            size = 4;
-        }
-
-        groups.push(
-            p.slice(i, i + size)
-        );
-
-        i += size;
-    }
-
-    return groups;
-}
-
-function showMainRoundGroup() {
-
-    const group =
-        matches[matchIndex];
-
-    if (!group || group.length < 2) {
-        finishMainRound();
-        return;
-    }
-
-    mainFirstChoice = null;
-    mainSecondChoice = null;
-
-    $("progress").textContent =
-        `${matchIndex + 1} / ${matches.length}`;
-
-    $("gameHint").textContent =
-        "① 1番好き → ② 次に好き の順で選んでください。";
-
-    const next =
-        $("gameNextButton");
-
-    next.style.display = "block";
-
-    next.textContent =
-        matchIndex === matches.length - 1
-            ? "このROUNDを確定"
-            : "このグループを確定";
-
-    next.onclick =
-        finishMainGroup;
-
-    const content =
-        $("gameContent");
-
-    content.innerHTML = `
-        <div class="rank-instruction">
-            ① 1番好きな顔
-        </div>
-
-        <div class="main-choice-grid" id="firstGrid"></div>
-
-        <div class="rank-instruction">
-            ② 次に好きな顔
-        </div>
-
-        <div class="main-choice-grid" id="secondGrid"></div>
-    `;
-
-    group.forEach((member, index) => {
-
-        const first =
-            document.createElement("button");
-
-        first.type = "button";
-        first.className = "mini-card";
-        first.dataset.index = index;
-
-        first.innerHTML = `
-            <img
-                src="${member.image}"
-                alt="${member.group} ${member.name}"
-            >
-            <span>${member.name}</span>
-            <small>${member.group}</small>
-        `;
-
-        first.addEventListener("click", () => {
-
-            mainFirstChoice = member;
-
-            document
-                .querySelectorAll(
-                    "#firstGrid .mini-card"
-                )
-                .forEach(card =>
-                    card.classList.remove("selected")
-                );
-
-            first.classList.add("selected");
-
-            document
-                .querySelectorAll(
-                    "#secondGrid .mini-card"
-                )
-                .forEach(card => {
-
-                    card.disabled =
-                        card.dataset.index ===
-                        String(index);
-
-                    if (card.disabled) {
-                        card.classList.remove(
-                            "selected"
-                        );
-                    }
-                });
-
-            if (
-                mainSecondChoice &&
-                mainSecondChoice.name === member.name
-            ) {
-                mainSecondChoice = null;
-            }
-        });
-
-        $("firstGrid").appendChild(first);
-
-        const second =
-            document.createElement("button");
-
-        second.type = "button";
-        second.className = "mini-card";
-        second.dataset.index = index;
-
-        second.innerHTML = `
-            <img
-                src="${member.image}"
-                alt="${member.group} ${member.name}"
-            >
-            <span>${member.name}</span>
-            <small>${member.group}</small>
-        `;
-
-        second.addEventListener("click", () => {
-
-            if (
-                mainFirstChoice &&
-                mainFirstChoice.name === member.name
-            ) {
-                return;
-            }
-
-            mainSecondChoice = member;
-
-            document
-                .querySelectorAll(
-                    "#secondGrid .mini-card"
-                )
-                .forEach(card =>
-                    card.classList.remove("selected")
-                );
-
-            second.classList.add("selected");
-        });
-
-        $("secondGrid").appendChild(second);
-    });
-
-    $("back-match-btn").disabled =
-        matchIndex === 0;
-}
-
-function finishMainGroup() {
-
-    if (!mainFirstChoice ||
-        !mainSecondChoice) {
-
-        alert(
-            "1番好きな顔と、次に好きな顔をそれぞれ選んでください。"
-        );
-
-        return;
-    }
-
-    if (
-        mainFirstChoice.name ===
-        mainSecondChoice.name
-    ) {
-
-        alert(
-            "同じメンバーは2回選べません。"
-        );
-
-        return;
-    }
-
-    stageWins.set(
-        `main-${matchIndex}`,
-        [
-            mainFirstChoice,
-            mainSecondChoice
-        ]
-    );
-
-    if (
-        matchIndex <
-        matches.length - 1
-    ) {
-
-        matchHistory.push(
-            snapshotGameState()
-        );
-
-        matchIndex++;
-
-        showMainRoundGroup();
-
-        return;
-    }
-
-    finishMainRound();
-}
-
-function finishMainRound() {
-
-    const winners = [];
-
-    for (
-        let i = 0;
-        i < matches.length;
-        i++
-    ) {
-
-        winners.push(
-            ...(stageWins.get(
-                `main-${i}`
-            ) || [])
-        );
-    }
-
-    stageParticipants =
-        winners;
-
-    /*
-     * 候補者が9人以下になった場合、
-     * 決勝でTOP9を選べる人数を確保できないため、
-     * そのまま結果へ進む。
-     *
-     * ※今後、ラウンドの人数設計を調整可能。
-     */
-
-    if (stage === 4) {
-
-        stage = 5;
-
-        showScreen(
-            $("finalIntroScreen")
-        );
-
-        return;
-    }
-
-    stage++;
-
-    $("mainIntroTitle").textContent =
-        `本選 ROUND ${stage - 1}`;
-
-    $("startCurrentMainButton").textContent =
-        `ROUND ${stage - 1}をはじめる`;
-
-    showScreen(
-        $("mainIntroScreen")
-    );
-}
-
-/* =========================
-   決勝
-========================= */
-
-function makeFinalMatches(participants) {
-
-    return shuffle(participants);
-}
-
-function showFinalMatch() {
-
-    if (
-        stageParticipants.length <= 9
-    ) {
-
-        finishFinal();
-
-        return;
-    }
-
-    if (!currentPair) {
-
-        const pool =
-            stageParticipants.filter(
-                member =>
-                    !finalSelected.has(
-                        member.name
-                    )
-            );
-
-        if (pool.length <= 1) {
-
-            finishFinal();
-
-            return;
-        }
-
-        finalChallenger =
-            pool[0];
-
-        finalOpponent =
-            pool[1];
-
-        currentPair = [
-            finalChallenger,
-            finalOpponent
-        ];
-    }
-
-    const pair =
-        currentPair;
-
-    $("gameContent").innerHTML = `
-        <div class="matchup">
-
-            <button
-                class="card"
-                id="finalCard0"
-                type="button"
-            >
-                <img
-                    src="${pair[0].image}"
-                    alt="${pair[0].group} ${pair[0].name}"
-                >
-
-                <div class="card-info">
-                    <div class="group">
-                        ${pair[0].group}
-                    </div>
-
-                    <div class="member-name">
-                        ${pair[0].name}
-                    </div>
-                </div>
-            </button>
-
-            <button
-                class="card"
-                id="finalCard1"
-                type="button"
-            >
-                <img
-                    src="${pair[1].image}"
-                    alt="${pair[1].group} ${pair[1].name}"
-                >
-
-                <div class="card-info">
-                    <div class="group">
-                        ${pair[1].group}
-                    </div>
-
-                    <div class="member-name">
-                        ${pair[1].name}
-                    </div>
-                </div>
-            </button>
-
-        </div>
-    `;
-
-    $("progress").textContent =
-        `TOP${finalSelected.size + 1}決定中`;
-
-    $("gameHint").textContent =
-        "より好きな顔をタップしてください。";
-
-    $("gameNextButton").style.display =
-        "none";
-
-    $("back-match-btn").disabled =
-        matchHistory.length === 0;
-
-    $("finalCard0").onclick =
-        () => chooseFinal(0);
-
-    $("finalCard1").onclick =
-        () => chooseFinal(1);
-}
-
-function chooseFinal(index) {
-
-    matchHistory.push(
-        snapshotGameState()
-    );
-
-    const winner =
-        currentPair[index];
-
-    finalSelected.add(
-        winner.name
-    );
-
-    finalChallenger = null;
-    finalOpponent = null;
-    currentPair = null;
-
-    if (
-        finalSelected.size >= 9 ||
-        stageParticipants.length -
-        finalSelected.size <= 0
-    ) {
-
-        finishFinal();
-
-        return;
-    }
-
-    showFinalMatch();
-}
-
-function finishFinal() {
-
-    const ranking =
-        stageParticipants.filter(
-            member =>
-                finalSelected.has(
-                    member.name
-                )
-        );
-
-    renderRanking(
-        ranking.slice(0, 9)
-    );
-
-    saveGameResult(
-        ranking.slice(0, 9)
-    );
-
-    showScreen(
-        $("resultScreen")
-    );
-}
-
-/* =========================
-   結果
-========================= */
-
-function renderRanking(ranking) {
-
-    const list =
-        $("resultList");
-
-    list.innerHTML = "";
-
-    ranking.forEach(
-        (member, index) => {
-
-            const card =
-                document.createElement("div");
-
-            card.className =
-                "result-card";
-
-            card.innerHTML = `
-                <div class="result-rank">
-                    ${index + 1}
-                </div>
-
-                <img
-                    src="${member.image}"
-                    alt="${member.group} ${member.name}"
-                >
-
-                <div class="result-info">
-                    <div class="member-name">
-                        ${member.name}
-                    </div>
-
-                    <div class="result-meta">
-                        ${member.group}
-                    </div>
-                </div>
-            `;
-
-            list.appendChild(card);
-        }
-    );
-}
-
-/* =========================
-   保存
-========================= */
-
-const SAVE_KEY =
-    "hybeSukigaoTop9Result";
-
-function saveGameResult(ranking) {
-
-    try {
-
-        localStorage.setItem(
-            SAVE_KEY,
-            JSON.stringify({
-                ranking,
-                savedAt:
-                    new Date().toISOString()
-            })
-        );
-
-    } catch (e) {}
-}
-
-function loadGameResult() {
-
-    try {
-
-        const raw =
-            localStorage.getItem(
-                SAVE_KEY
-            );
-
-        return raw
-            ? JSON.parse(raw)
-            : null;
-
-    } catch (e) {
-
-        return null;
-    }
-}
-
-function clearSavedResult() {
-
-    try {
-        localStorage.removeItem(
-            SAVE_KEY
-        );
-    } catch (e) {}
-}
-
-/* =========================
-   共有
-========================= */
-
-function getResultText() {
-
-    const saved =
-        loadGameResult();
-
-    if (!saved ||
-        !saved.ranking) {
-
-        return "";
-    }
-
-    return [
-        "HYBEナムドル 私の好き顔TOP9",
-        "",
-        ...saved.ranking.map(
-            (member, index) =>
-                `${index + 1}位 ${member.name}（${member.group}）`
-        )
-    ].join("\n");
-}
-
-async function copyResultText() {
-
-    const text =
-        getResultText();
-
-    if (!text) return;
-
-    try {
-
-        await navigator.clipboard.writeText(
-            text
-        );
-
-        alert(
-            "結果をコピーしました！"
-        );
-
-    } catch (e) {
-
-        alert(
-            "コピーできませんでした。"
-        );
-    }
-}
-
-function shareResultToX() {
-
-    const text =
-        getResultText();
-
-    const url =
-        location.href;
-
-    const shareUrl =
-        "https://twitter.com/intent/tweet?text=" +
-        encodeURIComponent(text) +
-        "&url=" +
-        encodeURIComponent(url);
-
-    window.open(
-        shareUrl,
-        "_blank"
-    );
-}
-
-/* =========================
-   タイブレーク
-========================= */
-
-let tieCallback = null;
-
-function openTieMatch(
-    a,
-    b,
-    callback
-) {
-
-    tieCallback =
-        callback;
-
-    $("tieTitle").textContent =
-        "タイブレーク";
-
-    $("tieText").textContent =
-        "同点のため、勝ち上がる方を選んでください。";
-
-    $("tieList").innerHTML = `
-
-        <button
-            class="tie-row"
-            type="button"
-            id="tieA"
-        >
-            <span>
-                ${a.group}　${a.name}
-            </span>
-
-            <strong>
-                選ぶ
-            </strong>
-        </button>
-
-        <button
-            class="tie-row"
-            type="button"
-            id="tieB"
-        >
-            <span>
-                ${b.group}　${b.name}
-            </span>
-
-            <strong>
-                選ぶ
-            </strong>
-        </button>
-    `;
-
-    $("tieContinue").style.display =
-        "none";
-
-    $("tieModal").classList.add(
-        "active"
-    );
-
-    $("tieA").onclick =
-        () => finishTie(a);
-
-    $("tieB").onclick =
-        () => finishTie(b);
-}
-
-function finishTie(winner) {
-
-    const callback =
-        tieCallback;
-
-    tieCallback = null;
-
-    closeTieModal();
-
-    if (callback) {
-        callback(winner);
-    }
-}
-
-function closeTieModal() {
-
-    $("tieModal").classList.remove(
-        "active"
-    );
-
-    $("tieList").innerHTML = "";
-
-    $("tieContinue").style.display =
-        "";
-}
-
-/* =========================
-   ボタン
-========================= */
-
-$("startButton").addEventListener(
-    "click",
-    () => {
-
-        clearSavedResult();
-
-        matchHistory = [];
-
-        showScreen(
-            $("prelimIntroScreen")
-        );
-    }
-);
-
-$("startPreliminaryButton").addEventListener(
-    "click",
-    () => {
-
-        stage = 1;
-
-        matchHistory = [];
-
-        stageParticipants =
-            shuffle([...members]);
-
-        beginStage();
-    }
-);
-
-$("startMainButton").addEventListener(
-    "click",
-    () => {
-
-        stage = 2;
-
-        matchHistory = [];
-
-        showScreen(
-            $("mainIntroScreen")
-        );
-
-        $("mainIntroTitle").textContent =
-            "本選 ROUND 1";
-
-        $("startCurrentMainButton").textContent =
-            "ROUND 1をはじめる";
-    }
-);
-
-$("startCurrentMainButton").addEventListener(
-    "click",
-    () => {
-        beginStage();
-    }
-);
-
-$("startFinalButton").addEventListener(
-    "click",
-    () => {
-
-        stage = 5;
-
-        matchHistory = [];
-
-        beginStage();
-    }
-);
-
-$("retryButton").addEventListener(
-    "click",
-    () => {
-
-        clearSavedResult();
-
-        matchHistory = [];
-
-        startGame();
-
-        showScreen(
-            $("prelimIntroScreen")
-        );
-    }
-);
-
-$("shareXButton").addEventListener(
-    "click",
-    shareResultToX
-);
-
-$("copyResultButton").addEventListener(
-    "click",
-    copyResultText
-);
-
-/* =========================
-   戻るボタン
-========================= */
-
-$("back-match-btn").addEventListener(
-    "click",
-    () => {
-
-        if (
-            matchHistory.length === 0
-        ) {
-            return;
-        }
-
-        const previous =
-            matchHistory.pop();
-
-        restoreGameState(
-            previous
-        );
-    }
-);
-
-/* =========================
-   タイブレーク閉じる
-========================= */
-
-$("tieContinue").addEventListener(
-    "click",
-    closeTieModal
-);
-
+$("backButton").onclick=()=>{
+  if(!stateHistory.length)return;
+  restoreState(stateHistory.pop());
+};
 </script>
-
 </body>
 </html>
