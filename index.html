@@ -31,7 +31,7 @@ h1{font-size:clamp(29px,7vw,48px);line-height:1.35;letter-spacing:.03em;margin:0
 .primary{border:0;background:var(--accent);color:#fff}
 .secondary,.text-button{border:1px solid var(--line);background:#fff;color:var(--text)}
 .text-button{display:block;margin:12px auto 0;text-decoration:none}
-.hero .primary,.hero .top-result-button{display:block;width:min(100%,260px);margin-left:auto;margin-right:auto}
+.hero .primary,.hero .top-result-button{display:block;margin-left:auto;margin-right:auto}
 .hero .top-result-button{margin-top:12px}
 .primary:hover,.secondary:hover,.text-button:hover{transform:translateY(-1px)}
 
@@ -448,6 +448,8 @@ function startMain(){
 function beginMainWithEvenParticipants(){
   mainRound=1;
   wins=new Map(participants.map(m=>[m.name,0]));
+  // 本選では予選の履歴を引き継がず、本選内の「ひとつ前」に戻れるようにする。
+  stateHistory=[];
   startMainRound();
 }
 
@@ -475,8 +477,9 @@ function openEvenAdjustment(){
       beginMainWithEvenParticipants();
     };
     [...grid.children].forEach(card=>card.onclick=()=>{
+      const wasSelected=card.classList.contains("selected");
       [...grid.children].forEach(c=>c.classList.remove("selected"));
-      card.classList.add("selected");
+      if(!wasSelected) card.classList.add("selected");
     });
     show("adjustScreen");
     return;
@@ -504,8 +507,9 @@ function openEvenAdjustment(){
   };
 
   [...grid.children].forEach(card=>card.onclick=()=>{
+    const wasSelected=card.classList.contains("selected");
     [...grid.children].forEach(c=>c.classList.remove("selected"));
-    card.classList.add("selected");
+    if(!wasSelected) card.classList.add("selected");
   });
 
   show("adjustScreen");
@@ -559,6 +563,8 @@ function duelCard(m,i){
 function chooseMain(winner){
   // 二重タップ防止
   document.querySelectorAll(".member-card").forEach(b=>b.disabled=true);
+  // 現在の対戦に戻れるよう、勝敗を記録する前の状態を保存。
+  stateHistory.push(cloneState());
   wins.set(winner.name,(wins.get(winner.name)||0)+1);
   roundWins++;
   advanceMainDuel(winner);
@@ -573,7 +579,6 @@ function advanceMainDuel(){
 
   if(mainRound<3){
     mainRound++;
-    stateHistory=[];
     startMainRound();
     return;
   }
