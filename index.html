@@ -106,7 +106,7 @@ header{text-align:center;margin-bottom:22px}
 <section id="prelimIntroScreen" class="screen center-screen">
   <div class="explain">
     <h2>予選</h2>
-    <p>57人を4人または3人ずつのグループに分けています。</p>
+    <p>57人を4人または3人ずつのグループに分けます。</p>
     <p>各グループから、<strong>0人〜全員</strong>を選んでください。<br>「この人好きかも」と思ったら気軽に選んでOK。</p>
     <p>予選で<strong>9人以上</strong>の候補を集めて、本選へ進みます。</p>
     <button id="startPrelim" class="primary" type="button" onclick="startPreliminary()">予選をはじめる</button>
@@ -144,10 +144,9 @@ header{text-align:center;margin-bottom:22px}
 <section id="mainIntroScreen" class="screen center-screen">
   <div class="explain">
     <h2 id="mainIntroTitle">本選</h2>
-    <p>候補同士をランダムに2人ずつ比較します。<p>
-    <p>表示された2人のうち、<strong>より好きな顔を1回タップするだけ</strong>。</p>
-    <p>本選は公平に比較できるよう、参加人数を偶数に調整してからスタートします。</p>
-    <p><strong>勝利数を蓄積</strong>し、決勝進出者を決めます。</p>
+    <p>候補同士をランダムに2人ずつ比較します。<br>表示された2人のうち、<strong>より好きな顔を1回タップするだけ</strong>。</p>
+    <p>本選は公平に比較できるよう、<strong>参加人数を偶数に調整してからスタート</strong>します。</p>
+    <p>勝利数を蓄積し、決勝進出者を決めます。</p>
     <button id="startMainRound" class="primary" type="button" onclick="startMain()">本選をはじめる</button>
   </div>
 </section>
@@ -596,9 +595,25 @@ function finishMainRounds(){
 }
 
 function resolveCutoffTies(above,tied,target){
-  let pool=shuffle(tied);
   const need=target-above.length;
+  const pool=shuffle(tied);
   const selected=[];
+  const usedPairs=new Set();
+  let duelNo=0;
+
+  // 同じ2人がもう一度対戦しないよう、今回のタイブレークで使用した組み合わせを記録する。
+  const pairKey=(a,b)=>[a.name,b.name].sort().join("__");
+
+  const buildNextPair=()=>{
+    const candidates=[];
+    for(let i=0;i<pool.length;i++){
+      for(let j=i+1;j<pool.length;j++){
+        const key=pairKey(pool[i],pool[j]);
+        if(!usedPairs.has(key)) candidates.push([pool[i],pool[j]]);
+      }
+    }
+    return candidates.length ? shuffle(candidates)[0] : null;
+  };
 
   const pickNext=()=>{
     if(selected.length>=need){
@@ -606,20 +621,48 @@ function resolveCutoffTies(above,tied,target){
       showFinalIntro();
       return;
     }
+
+    // 1人だけ残った場合は、その人を採用。
     if(pool.length===1){
       selected.push(pool.shift());
       pickNext();
       return;
     }
-    const pair=[pool.shift(),pool.shift()];
+
+    const pair=buildNextPair();
+    if(!pair){
+      // 未使用の組み合わせがなくなった場合は、残った候補から必要人数を確保する。
+      while(pool.length && selected.length<need){
+        selected.push(pool.shift());
+      }
+      pickNext();
+      return;
+    }
+
+    const key=pairKey(pair[0],pair[1]);
+    usedPairs.add(key);
+    duelNo++;
+
     $("stageName").textContent="本選";
     $("stageTitle").textContent="同点のため2択で決定";
-    $("progress").textContent=`${selected.length+1} / ${need}`;
+    $("progress").textContent=`${duelNo} / ${need}`;
     $("gameHint").textContent="より好きな顔をタップしてください。";
     $("gameContent").innerHTML=`<div class="duel">${duelCard(pair[0],0)}${duelCard(pair[1],1)}</div>`;
-    $("duel0").onclick=()=>{selected.push(pair[0]);pickNext()};
-    $("duel1").onclick=()=>{selected.push(pair[1]);pickNext()};
+
+    const choose=(winner,loser)=>{
+      selected.push(winner);
+      // 勝者・敗者の両方をプールから外すことで、同じ人が再び登場するのを防ぐ。
+      for(const person of [winner,loser]){
+        const index=pool.findIndex(m=>m.name===person.name);
+        if(index!==-1) pool.splice(index,1);
+      }
+      pickNext();
+    };
+
+    $("duel0").onclick=()=>choose(pair[0],pair[1]);
+    $("duel1").onclick=()=>choose(pair[1],pair[0]);
   };
+
   show("gameScreen");
   pickNext();
 }
@@ -770,9 +813,13 @@ function updateSavedResultButton(){
   $("viewResultButton").style.display=saved ? "block" : "none";
 }
 
+const SITE_URL="https://ddok-03.github.io/hybe-sukigao/";
+
 function resultText(){
-  return "HYBE所属 ナムドル\nわたしの好きな顔 TOP9\n\n"+
-    resultRanking.map((m,i)=>`${i+1}位　${m.name}（${m.group}）`).join("\n");
+  return "HYBEナムドル好き顔 TOP9\n\n"+
+    resultRanking.map((m,i)=>`${i+1}位 ${m.name}`).join("\n")+
+    "\n\n"+SITE_URL+
+    "\n\n#HYBEナムドル好き顔TOP9";
 }
 
 function goBack(){
@@ -823,7 +870,7 @@ async function copyResult(){
 }
 
 function shareResult(){
-  const text=resultText()+"\n\n#HYBEナムドル好き顔TOP9";
+  const text=resultText();
   const url="https://twitter.com/intent/tweet?text="+encodeURIComponent(text);
   window.open(url,"_blank","noopener,noreferrer");
 }
