@@ -95,7 +95,7 @@ header{text-align:center;margin-bottom:22px}
 <section id="startScreen" class="screen center-screen active">
   <div class="hero">
     <h1>HYBE所属 ナムドル<br>わたしの好きな顔 TOP9</h1>
-    <p class="subtitle">HYBE所属男性アイドル57人の中から、<br>あなたの「好きな顔」TOP9を決めよう。</p>
+    <p class="subtitle">HYBE所属男性アイドル64人の中から、<br>あなたの「好きな顔」TOP9を決めよう。</p>
     <button id="startButton" class="primary" type="button" onclick="show('prelimIntroScreen')">START</button>
     <button id="viewResultButton" class="secondary top-result-button" type="button" onclick="viewSavedResult()" style="display:none">前回の結果を見る</button>
     <button id="aboutButton" class="text-button" type="button" onclick="show('aboutScreen')">本サイトについて</button>
@@ -114,7 +114,7 @@ header{text-align:center;margin-bottom:22px}
 <section id="prelimIntroScreen" class="screen center-screen">
   <div class="explain">
     <h2>予選</h2>
-    <p>つぎの画面で表示される3～4人のアーティストの中から、<br><strong>好きな顔のアーティストを0人～全員を選んでください</strong>。</p>
+    <p>つぎの画面で表示される4人のアーティストの中から、<br><strong>好きな顔のアーティストを0人～全員を選んでください</strong>。</p>
     <p>予選で9人以上の候補を集めて、本選へ進みます。</p>
     <button id="startPrelim" class="primary" type="button" onclick="startPreliminary()">予選をはじめる</button>
   </div>
@@ -257,7 +257,14 @@ const members = [
   {group:"CORTIS",name:"JAMES",image:"images/james.jpg"},
   {group:"CORTIS",name:"JUHOON",image:"images/juhoon.jpg"},
   {group:"CORTIS",name:"SEONGHYEON",image:"images/seonghyeon.jpg"},
-  {group:"CORTIS",name:"KEONHO",image:"images/keonho.jpg"}
+  {group:"CORTIS",name:"KEONHO",image:"images/keonho.jpg"},
+  {group:"aoen",name:"YUJU",image:"images/yuju.jpg"},
+  {group:"aoen",name:"RUKA",image:"images/ruka.jpg"},
+  {group:"aoen",name:"GAKU",image:"images/gaku.jpg"},
+  {group:"aoen",name:"HIKARU",image:"images/hikaru.jpg"},
+  {group:"aoen",name:"SOTA",image:"images/sota.jpg"},
+  {group:"aoen",name:"KYOSUKE",image:"images/kyosuke.jpg"},
+  {group:"aoen",name:"REO",image:"images/reo.jpg"}
 ];
 
 const $=id=>document.getElementById(id);
@@ -368,11 +375,12 @@ function startPreliminary(){
 }
 
 function makePrelimGroups(){
+  // 64人をランダムに並べ、4人×16グループに分ける。
   const p=shuffle(members);
   const groups=[];
-  let i=0;
-  for(let n=0;n<12;n++){groups.push(p.slice(i,i+4));i+=4;}
-  for(let n=0;n<3;n++){groups.push(p.slice(i,i+3));i+=3;}
+  for(let i=0;i<p.length;i+=4){
+    groups.push(p.slice(i,i+4));
+  }
   return groups;
 }
 
@@ -853,7 +861,8 @@ function updateSavedResultButton(){
 const SITE_URL="https://ddok-03.github.io/hybe-sukigao/";
 
 function resultText(){
-  return "HYBEナムドル好き顔 TOP9\n\n"+
+  return "HYBE所属 ナムドル\n"+
+    "わたしの好きな顔 TOP9\n\n"+
     resultRanking.map((m,i)=>`${i+1}位 ${m.name}`).join("\n")+
     "\n\n"+SITE_URL+
     "\n\n#HYBEナムドル好き顔TOP9";
