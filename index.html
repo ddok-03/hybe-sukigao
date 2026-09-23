@@ -282,9 +282,34 @@ let finalIndex=0;
 let resultRanking=[];
 let stateHistory=[];
 
-function show(id){
+function show(id, options={}){
+  const current=document.querySelector(".screen.active");
+  const currentId=current ? current.id : null;
+
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
   $(id).classList.add("active");
+
+  // 画面が実際に切り替わったときだけブラウザ履歴に追加します。
+  // popstateから呼ばれた場合はpushしません。
+  if(options.push!==false && currentId!==id){
+    history.pushState({screen:id}, "", "#"+id);
+  }
+}
+
+// ブラウザの「戻る」ボタンで、ひとつ前の画面へ戻れるようにします。
+window.addEventListener("popstate", event=>{
+  const id=event.state && event.state.screen;
+  if(id && $(id)){
+    show(id,{push:false});
+  }else{
+    // 履歴の最初まで戻った場合はTOP画面を表示します。
+    show("startScreen",{push:false});
+  }
+});
+
+// 現在の画面をブラウザ履歴の起点として登録します。
+if(!history.state || !history.state.screen){
+  history.replaceState({screen:"startScreen"}, "", location.pathname + location.search + "#startScreen");
 }
 
 function cloneState(){
