@@ -18,7 +18,7 @@
 html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);
   font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Hiragino Kaku Gothic ProN",
   "Yu Gothic",YuGothic,Arial,sans-serif}
-button{font:inherit}
+button{font:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .screen{display:none;min-height:100vh;padding:24px 16px 48px}
 .screen.active{display:block}
 .container{width:min(100%,760px);margin:0 auto}
@@ -60,11 +60,14 @@ header{text-align:center;margin-bottom:22px}
 .member-card:hover{border-color:#222}
 .member-card .group{margin-top:10px}
 .member-card .member-name{font-size:17px}
-.result-list{display:grid;gap:10px}
-.result-card{display:grid;grid-template-columns:48px 72px 1fr;gap:12px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:16px;padding:8px}
-.result-rank{text-align:center;font-size:22px;font-weight:700}
-.result-card img{width:72px;height:72px;border-radius:10px;object-fit:cover}
-.result-meta{font-size:12px;color:var(--sub);margin-top:4px}
+.result-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:18px 0}
+.result-card{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-width:0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:6px 6px 9px;text-align:center}
+.result-rank{font-size:17px;font-weight:700;line-height:1.2;margin-bottom:4px}
+.result-card img{display:block;width:100%;aspect-ratio:1/1;border-radius:10px;object-fit:cover}
+.result-card .member-name{font-size:13px;line-height:1.25;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.result-meta{font-size:10px;color:var(--sub);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.prelim-next-wrap{display:flex;justify-content:center;margin-top:16px;position:relative;z-index:10}
+.prelim-next-wrap button{position:relative;z-index:11;pointer-events:auto;touch-action:manipulation;-webkit-appearance:none;appearance:none}
 .result-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:24px}
 .note{font-size:10px;color:#999;line-height:1.7;margin-top:28px}
 @media(min-width:650px){
@@ -125,11 +128,11 @@ header{text-align:center;margin-bottom:22px}
 
 <section id="mainIntroScreen" class="screen center-screen">
   <div class="explain">
-    <h2 id="mainIntroTitle">本選 ROUND 1</h2>
-    <p>ここからは、予選のグループ分けをいったん忘れて、候補同士をランダムに2人ずつ比較します。</p>
-    <p>表示された2人のうち、<strong>より好きな顔を1回タップするだけ</strong>。選んだ瞬間に次の対戦へ進みます。</p>
-    <p>本選は公平に比較できるよう、参加人数を偶数に調整してからスタートします。</p><p>ROUND 1〜3の<strong>勝利数をすべて蓄積</strong>し、3ROUND終了後に決勝進出者を決めます。</p>
-    <button id="startMainRound" class="primary" type="button" onclick="startMain()">ROUND 1をはじめる</button>
+    <h2 id="mainIntroTitle">本選</h2>
+    <p>候補同士をランダムに2人ずつ比較します。表示された2人のうち、<strong>より好きな顔を1回タップするだけ</strong>。</p>
+    <p>本選は公平に比較できるよう、参加人数を偶数に調整してからスタートします。</p>
+    <p><strong>勝利数を蓄積</strong>し、決勝進出者を決めます。</p>
+    <button id="startMainRound" class="primary" type="button" onclick="startMain()">本選をはじめる</button>
   </div>
 </section>
 
@@ -332,8 +335,8 @@ function renderPrelim(){
   content.innerHTML=`
     <div class="panel">このグループでは、<strong>0〜${group.length}人</strong>まで選べます。</div>
     <div class="prelim-grid" id="prelimGrid"></div>
-    <div class="actions">
-      <button id="prelimNext" class="primary">${prelimIndex===prelimGroups.length-1?"予選を終了":"次へ"}</button>
+    <div class="prelim-next-wrap">
+      <button id="prelimNext" class="primary" type="button" onclick="finishPrelimGroup()">${prelimIndex===prelimGroups.length-1?"予選を終了":"次へ"}</button>
     </div>
   `;
 
@@ -347,7 +350,6 @@ function renderPrelim(){
     grid.appendChild(b);
   });
 
-  $("prelimNext").onclick=finishPrelimGroup;
   $("backButton").disabled=prelimIndex===0;
 }
 
@@ -475,9 +477,11 @@ function makeDuelPairs(list){
 }
 
 function renderMainDuel(){
-  $("stageName").textContent=`本選 ROUND ${mainRound}`;
+  $("stageName").textContent="本選";
   $("stageTitle").textContent="より好きな顔を選んでください";
-  $("progress").textContent=`${roundIndex+1} / ${roundMatches.length}`;
+  const totalMainMatches=roundMatches.length*3;
+  const overallMainIndex=(mainRound-1)*roundMatches.length+roundIndex+1;
+  $("progress").textContent=`${overallMainIndex} / ${totalMainMatches}`;
 
   const pair=roundMatches[roundIndex];
   if(!pair) return;
@@ -564,7 +568,7 @@ function resolveCutoffTies(above,tied,target){
       return;
     }
     const pair=[pool.shift(),pool.shift()];
-    $("stageName").textContent="本選 タイブレーク";
+    $("stageName").textContent="本選";
     $("stageTitle").textContent="同点のため2択で決定";
     $("progress").textContent=`${selected.length+1} / ${need}`;
     $("gameHint").textContent="より好きな顔をタップしてください。";
@@ -591,10 +595,20 @@ function startFinal(){
 }
 
 function makeFinalSchedule(list,rounds){
+  // 円形方式で各ラウンドの対戦を組み、同じ2人が再戦しないようにする。
+  // 決勝候補は必ず偶数人数。
+  const players=shuffle(list);
+  const n=players.length;
+  const fixed=players[0];
+  let rotating=players.slice(1);
   const matches=[];
+
   for(let r=0;r<rounds;r++){
-    const pairs=makeDuelPairs(list);
-    pairs.forEach(p=>matches.push(p));
+    const current=[fixed,...rotating];
+    for(let i=0;i<n/2;i++){
+      matches.push([current[i],current[n-1-i]]);
+    }
+    rotating=[rotating[rotating.length-1],...rotating.slice(0,-1)];
   }
   return matches;
 }
@@ -635,18 +649,28 @@ function finishFinal(){
     if(bw!==aw) return bw-aw;
     return (finalWins.get(b.name)||0)-(finalWins.get(a.name)||0);
   });
-  resultRanking=ranking.slice(0,9);
+
+  // 念のため名前で重複を除外し、必ず9人の異なるメンバーを表示する。
+  const unique=[];
+  const seen=new Set();
+  for(const m of ranking){
+    if(seen.has(m.name)) continue;
+    seen.add(m.name);
+    unique.push(m);
+    if(unique.length===9) break;
+  }
+  resultRanking=unique;
   renderResult();
   show("resultScreen");
 }
 
 function renderResult(){
   $("resultList").innerHTML=resultRanking.map((m,i)=>{
-    const total=(wins.get(m.name)||0)+(finalWins.get(m.name)||0);
     return `<div class="result-card">
-      <div class="result-rank">${i+1}</div>
+      <div class="result-rank">${i+1}位</div>
       <img src="${m.image}" alt="${m.group} ${m.name}">
-      <div><div class="member-name">${m.name}</div><div class="result-meta">${m.group}　｜　本選 ${wins.get(m.name)||0}勝　決勝 ${finalWins.get(m.name)||0}勝</div></div>
+      <div class="member-name">${m.name}</div>
+      <div class="result-meta">${m.group}</div>
     </div>`;
   }).join("");
   try{
