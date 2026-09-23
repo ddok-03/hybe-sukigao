@@ -48,8 +48,10 @@ header{text-align:center;margin-bottom:22px}
 .member-name{font-weight:700;margin-top:3px}
 .actions{display:flex;flex-direction:column;align-items:center;gap:9px;margin-top:20px}
 .hint{font-size:13px;color:var(--sub);text-align:center}
-.back{border:0;background:transparent;text-decoration:underline;color:#777;cursor:pointer;padding:6px}
+.back{border:1px solid var(--line);background:#fff;text-decoration:none;color:#777;cursor:pointer;padding:10px 20px;border-radius:999px;min-width:190px}
 .back:disabled{opacity:.3;cursor:default}
+.text-button{border:0;background:transparent;text-decoration:underline;color:#777;cursor:pointer;padding:8px 12px;display:block;margin:10px auto 0}
+#restartButton{margin-top:0}
 .candidate-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:20px 0}
 .candidate{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;text-align:center;padding-bottom:9px}
 .candidate img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
@@ -87,7 +89,17 @@ header{text-align:center;margin-bottom:22px}
     <h1>HYBE所属 ナムドル<br>わたしの好きな顔 TOP9</h1>
     <p class="subtitle">HYBE所属男性アイドル57人の中から、<br>あなたの「好きな顔」TOP9を決めよう。</p>
     <button id="startButton" class="primary" type="button" onclick="show('prelimIntroScreen')">START</button>
-    <p class="note">本サイト内における画像は著作権法第32条における「引用の目的正当な範囲」に則り使用しています。</p>
+    <button id="viewResultButton" class="text-button" type="button" onclick="viewSavedResult()" style="display:none">結果を見る</button>
+    <button id="aboutButton" class="text-button" type="button" onclick="show('aboutScreen')">本サイトについて</button>
+  </div>
+</section>
+
+<section id="aboutScreen" class="screen center-screen">
+  <div class="explain">
+    <h2>本サイトについて</h2>
+    <p>本サイトはHYBEおよび各所属事務所とは一切関係ございません。</p>
+    <p>画像やアーティスト名等に関する一切の権利は、各アーティストおよび所属事務所に帰属します。</p>
+    <button class="secondary" type="button" onclick="show('startScreen')">TOPへ戻る</button>
   </div>
 </section>
 
@@ -109,7 +121,10 @@ header{text-align:center;margin-bottom:22px}
     </header>
     <div class="panel">これより候補同士をランダムな2択で比較する<br><strong>本選</strong>へ進みます。</div>
     <div id="candidateGrid" class="candidate-grid"></div>
-    <div style="text-align:center"><button id="toMain" class="primary" type="button" onclick="show('mainIntroScreen')">本選へ進む</button></div>
+    <div class="result-actions">
+      <button id="toMain" class="primary" type="button" onclick="show('mainIntroScreen')">本選へ進む</button>
+      <button id="redoPrelim" class="secondary" type="button" onclick="redoPreliminary()">予選をやり直す</button>
+    </div>
   </div>
 </section>
 <section id="adjustScreen" class="screen">
@@ -156,7 +171,8 @@ header{text-align:center;margin-bottom:22px}
     <div id="gameContent"></div>
     <div class="actions">
       <div id="gameHint" class="hint"></div>
-      <button id="backButton" class="back" type="button">ひとつ前にもどる</button>
+      <button id="backButton" class="back" type="button" onclick="goBack()">ひとつ前にもどる</button>
+      <button id="restartButton" class="back" type="button" onclick="restartFromBeginning()">はじめからやり直す</button>
     </div>
   </div>
 </section>
@@ -169,8 +185,8 @@ header{text-align:center;margin-bottom:22px}
     </header>
     <div id="resultList" class="result-list"></div>
     <div class="result-actions">
-      <button id="shareX" class="primary">Xで結果をシェア</button>
-      <button id="copyResult" class="secondary">結果をテキストでコピー</button>
+      <button id="shareX" class="primary" type="button" onclick="shareResult()">結果をXでシェアする</button>
+      <button id="copyResult" class="secondary" type="button" onclick="copyResult()">結果をテキストとしてコピー</button>
       <button id="retry" class="secondary" type="button" onclick="startNewGame()">もう一度やる</button>
     </div>
   </div>
@@ -244,6 +260,7 @@ let stage=0;
 let prelimGroups=[];
 let prelimIndex=0;
 let prelimSelected=[];
+let prelimSelections=[];
 let participants=[];
 let wins=new Map();
 let roundMatches=[];
@@ -269,6 +286,7 @@ function cloneState(){
     prelimGroups:prelimGroups.map(g=>[...g]),
     prelimIndex,
     prelimSelected:[...prelimSelected],
+    prelimSelections:prelimSelections.map(a=>[...a]),
     participants:[...participants],
     wins:[...wins.entries()],
     roundMatches:roundMatches.map(m=>[...m]),
@@ -288,6 +306,7 @@ function restoreState(s){
   prelimGroups=s.prelimGroups.map(g=>[...g]);
   prelimIndex=s.prelimIndex;
   prelimSelected=[...s.prelimSelected];
+  prelimSelections=(s.prelimSelections||[]).map(a=>[...a]);
   participants=[...s.participants];
   wins=new Map(s.wins);
   roundMatches=s.roundMatches.map(m=>[...m]);
@@ -300,9 +319,9 @@ function restoreState(s){
   finalIndex=s.finalIndex;
   resultRanking=[...s.resultRanking];
 
-  if(stage===1) renderPrelim();
-  else if(stage===2||stage===3||stage===4) renderMainDuel();
-  else if(stage===5) renderFinal();
+  if(stage===1){ renderPrelim(); show("gameScreen"); }
+  else if(stage===2||stage===3||stage===4){ renderMainDuel(); show("gameScreen"); }
+  else if(stage===5){ renderFinal(); show("gameScreen"); }
 }
 
 function startPreliminary(){
@@ -310,6 +329,7 @@ function startPreliminary(){
   prelimGroups=makePrelimGroups();
   prelimIndex=0;
   prelimSelected=[];
+  prelimSelections=[];
   stateHistory=[];
   renderPrelim();
   show("gameScreen");
@@ -336,7 +356,7 @@ function renderPrelim(){
     <div class="panel">このグループでは、<strong>0〜${group.length}人</strong>まで選べます。</div>
     <div class="prelim-grid" id="prelimGrid"></div>
     <div class="prelim-next-wrap">
-      <button id="prelimNext" class="primary" type="button" onclick="finishPrelimGroup()">${prelimIndex===prelimGroups.length-1?"予選を終了":"次へ"}</button>
+      <button id="prelimNext" class="primary" type="button">${prelimIndex===prelimGroups.length-1?"予選を終了":"次へ"}</button>
     </div>
   `;
 
@@ -346,25 +366,39 @@ function renderPrelim(){
     b.type="button";
     b.className="prelim-card";
     b.innerHTML=`<img src="${m.image}" alt="${m.group} ${m.name}"><div class="group">${m.group}</div><div class="member-name">${m.name}</div>`;
+    if((prelimSelections[prelimIndex]||[]).includes(m.name)) b.classList.add("selected");
     b.addEventListener("click",()=>b.classList.toggle("selected"));
     grid.appendChild(b);
   });
+
+  const nextButton=$("prelimNext");
+  nextButton.onclick=()=>{ finishPrelimGroup(); };
 
   $("backButton").disabled=prelimIndex===0;
 }
 
 function finishPrelimGroup(){
-  stateHistory.push(cloneState());
+  // 現在のグループの選択状態を保存してから次へ進む。
   const group=prelimGroups[prelimIndex];
   const cards=[...document.querySelectorAll("#prelimGrid .prelim-card")];
   const chosen=cards.map((c,i)=>c.classList.contains("selected")?group[i]:null).filter(Boolean);
-  prelimSelected.push(...chosen);
+  prelimSelections[prelimIndex]=chosen.map(m=>m.name);
+
+  // 戻ったときに、この時点までの状態を完全に復元できるよう保存。
+  stateHistory.push(cloneState());
 
   if(prelimIndex<prelimGroups.length-1){
+    prelimSelected=prelimGroups.slice(0,prelimIndex+1).flatMap((g,i)=>
+      g.filter(m=>(prelimSelections[i]||[]).includes(m.name))
+    );
     prelimIndex++;
     renderPrelim();
     return;
   }
+
+  prelimSelected=prelimGroups.flatMap((g,i)=>
+    g.filter(m=>(prelimSelections[i]||[]).includes(m.name))
+  );
 
   if(prelimSelected.length<9){
     stateHistory=[];
@@ -383,6 +417,15 @@ function finishPrelimGroup(){
     </div>
   `).join("");
   show("candidateResultScreen");
+}
+
+function uniqueMembers(list){
+  const seen=new Set();
+  return list.filter(m=>{
+    if(seen.has(m.name)) return false;
+    seen.add(m.name);
+    return true;
+  });
 }
 
 function startMain(){
@@ -678,6 +721,12 @@ function renderResult(){
   }catch(e){}
 }
 
+function restartFromBeginning(){
+  if(!confirm("現在の進行状況をリセットして、はじめからやり直しますか？")) return;
+  startNewGame();
+  show("startScreen");
+}
+
 function startNewGame(){
   try{localStorage.removeItem("hybeSukigaoTop9");}catch(e){}
   resultRanking=[];
@@ -685,6 +734,7 @@ function startNewGame(){
   prelimGroups=[];
   prelimIndex=0;
   prelimSelected=[];
+  prelimSelections=[];
   participants=[];
   wins=new Map();
   finalists=[];
@@ -720,10 +770,64 @@ function updateSavedResultButton(){
 }
 
 function resultText(){
-  return "HYBE所属 ナムドル\\nわたしの好きな顔 TOP9\\n\\n"+
-    resultRanking.map((m,i)=>`${i+1}位　${m.name}（${m.group}）`).join("\\n");
+  return "HYBE所属 ナムドル\nわたしの好きな顔 TOP9\n\n"+
+    resultRanking.map((m,i)=>`${i+1}位　${m.name}（${m.group}）`).join("\n");
 }
 
+function goBack(){
+  if(!stateHistory.length){
+    return;
+  }
+  const previous=stateHistory.pop();
+  restoreState(previous);
+}
+
+function redoPreliminary(){
+  // 候補結果画面から予選の1グループ目へ戻る。
+  // これまでの選択は保持したまま、最初から確認・変更できる。
+  if(!prelimGroups.length){
+    startPreliminary();
+    return;
+  }
+  stage=1;
+  prelimIndex=0;
+  prelimSelected=prelimGroups.flatMap((g,i)=>
+    g.filter(m=>(prelimSelections[i]||[]).includes(m.name))
+  );
+  stateHistory=[];
+  renderPrelim();
+  show("gameScreen");
+}
+
+async function copyResult(){
+  const text=resultText();
+  try{
+    if(navigator.clipboard && window.isSecureContext){
+      await navigator.clipboard.writeText(text);
+    }else{
+      const ta=document.createElement("textarea");
+      ta.value=text;
+      ta.style.position="fixed";
+      ta.style.left="-9999px";
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      document.execCommand("copy");
+      ta.remove();
+    }
+    alert("結果をコピーしました！");
+  }catch(e){
+    alert("コピーできませんでした。もう一度お試しください。");
+  }
+}
+
+function shareResult(){
+  const text=resultText()+"\n\n#HYBEナムドル好き顔TOP9";
+  const url="https://twitter.com/intent/tweet?text="+encodeURIComponent(text);
+  window.open(url,"_blank","noopener,noreferrer");
+}
+
+updateSavedResultButton();
 </script>
 </body>
 </html>
