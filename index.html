@@ -67,11 +67,11 @@ header{text-align:center;margin-bottom:22px}
 .member-card .group{margin-top:10px}
 .member-card .member-name{font-size:17px}
 .result-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:18px 0}
-.result-card{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-width:0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 8px 14px;text-align:center;min-height:250px}
+.result-card{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-width:0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 8px 7px;text-align:center;min-height:0}
 .result-rank{font-size:18px;font-weight:700;line-height:1.2;min-height:30px;display:flex;align-items:center;justify-content:center;margin-bottom:7px}
 .result-card img{display:block;width:100%;aspect-ratio:4/5;border-radius:10px;object-fit:cover}
-.result-card .member-name{font-size:13px;line-height:1.25;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
-.result-meta{font-size:10px;color:var(--sub);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.result-card .member-name{font-size:13px;line-height:1.25;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.result-meta{font-size:10px;color:var(--sub);margin-top:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .prelim-next-wrap{display:flex;justify-content:center;margin-top:16px;position:relative;z-index:10}
 .prelim-next-wrap button{position:relative;z-index:11;pointer-events:auto;touch-action:manipulation;-webkit-appearance:none;appearance:none}
 .result-actions{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;margin-top:24px}
@@ -95,7 +95,7 @@ header{text-align:center;margin-bottom:22px}
 <section id="startScreen" class="screen center-screen active">
   <div class="hero">
     <h1>HYBE所属 ナムドル<br>わたしの好きな顔 TOP9</h1>
-    <p class="subtitle">HYBE所属男性アーティスト57人の中から、<br>あなたの「好きな顔」TOP9を決めよう。</p>
+    <p class="subtitle">HYBE所属男性アイドル57人の中から、<br>あなたの「好きな顔」TOP9を決めよう。</p>
     <button id="startButton" class="primary" type="button" onclick="show('prelimIntroScreen')">START</button>
     <button id="viewResultButton" class="secondary top-result-button" type="button" onclick="viewSavedResult()" style="display:none">前回の結果を見る</button>
     <button id="aboutButton" class="text-button" type="button" onclick="show('aboutScreen')">本サイトについて</button>
