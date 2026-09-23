@@ -114,9 +114,8 @@ header{text-align:center;margin-bottom:22px}
 <section id="prelimIntroScreen" class="screen center-screen">
   <div class="explain">
     <h2>予選</h2>
-    <p>57人を4人または3人ずつのグループに分けます。</p>
-    <p>各グループから、<strong>0人〜全員</strong>を選んでください。<br>「この人好きかも」と思ったら気軽に選んでOK。</p>
-    <p>予選で<strong>9人以上</strong>の候補を集めて、本選へ進みます。</p>
+    <p>つぎの画面で表示される3～4人のアーティスト中から、<br><strong>好きな顔のアーティストを0人～全員を選んでください</strong>。</p>
+    <p>予選で9人以上の候補を集めて、本選へ進みます。</p>
     <button id="startPrelim" class="primary" type="button" onclick="startPreliminary()">予選をはじめる</button>
   </div>
 </section>
@@ -163,8 +162,8 @@ header{text-align:center;margin-bottom:22px}
   <div class="explain">
     <h2>決勝戦</h2>
     <p>本選を勝ち抜いた決勝候補を、最後にもう一度2択で比較します。</p>
-    <p>より好きな顔をタップすると、すぐ次の対戦へ進みます。</p>
-    <p>決勝の勝利数も加味して、あなたの<strong>好きな顔TOP9</strong>を決定します。</p>
+    <p>より好きな顔のアーティストをタップしてください。</p>
+    <p>決勝の勝利数を加味し、あなたの好きな顔TOP9を決定します。</p>
     <button id="startFinal" class="primary" type="button" onclick="startFinal()">決勝戦へ進む</button>
   </div>
 </section>
@@ -361,7 +360,7 @@ function renderPrelim(){
 
   const content=$("gameContent");
   content.innerHTML=`
-    <div class="panel">このグループでは、<strong>0〜${group.length}人</strong>まで選べます。</div>
+    <div class="panel"><strong>0〜${group.length}人まで選べます</strong></div>
     <div class="prelim-grid" id="prelimGrid"></div>
     <div class="prelim-next-wrap">
       <button id="prelimNext" class="primary" type="button">${prelimIndex===prelimGroups.length-1?"予選を終了":"次へ"}</button>
