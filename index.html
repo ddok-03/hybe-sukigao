@@ -94,7 +94,7 @@ header{text-align:center;margin-bottom:22px}
     <p>57人を4人または3人ずつのグループに分けます。</p>
     <p>各グループから、<strong>0人〜全員</strong>を選んでください。<br>「この人好きかも」と思ったら気軽に選んでOK。</p>
     <p>予選で<strong>9人以上</strong>の候補を集めて、本選へ進みます。</p>
-    <button id="startPrelim" class="primary">予選をはじめる</button>
+    <button id="startPrelim" class="primary" type="button" onclick="startPreliminary()">予選をはじめる</button>
   </div>
 </section>
 
@@ -106,10 +106,9 @@ header{text-align:center;margin-bottom:22px}
     </header>
     <div class="panel">これより候補同士をランダムな2択で比較する<br><strong>本選</strong>へ進みます。</div>
     <div id="candidateGrid" class="candidate-grid"></div>
-    <div style="text-align:center"><button id="toMain" class="primary">本選へ進む</button></div>
+    <div style="text-align:center"><button id="toMain" class="primary" type="button" onclick="show('mainIntroScreen')">本選へ進む</button></div>
   </div>
 </section>
-
 <section id="adjustScreen" class="screen">
   <div class="container">
     <header>
@@ -129,9 +128,8 @@ header{text-align:center;margin-bottom:22px}
     <h2 id="mainIntroTitle">本選 ROUND 1</h2>
     <p>ここからは、予選のグループ分けをいったん忘れて、候補同士をランダムに2人ずつ比較します。</p>
     <p>表示された2人のうち、<strong>より好きな顔を1回タップするだけ</strong>。選んだ瞬間に次の対戦へ進みます。</p>
-    <p>本選は公平に比較できるよう、参加人数を偶数に調整してからスタートします。</p>
-    <p>ROUND 1〜3の<strong>勝利数をすべて蓄積</strong>し、3ROUND終了後に決勝進出者を決めます。</p>
-    <button id="startMainRound" class="primary">ROUND 1をはじめる</button>
+    <p>本選は公平に比較できるよう、参加人数を偶数に調整してからスタートします。</p><p>ROUND 1〜3の<strong>勝利数をすべて蓄積</strong>し、3ROUND終了後に決勝進出者を決めます。</p>
+    <button id="startMainRound" class="primary" type="button" onclick="startMain()">ROUND 1をはじめる</button>
   </div>
 </section>
 
@@ -141,7 +139,7 @@ header{text-align:center;margin-bottom:22px}
     <p>本選を勝ち抜いた決勝候補を、最後にもう一度2択で比較します。</p>
     <p>より好きな顔をタップすると、すぐ次の対戦へ進みます。</p>
     <p>決勝の勝利数も加味して、あなたの<strong>好きな顔TOP9</strong>を決定します。</p>
-    <button id="startFinal" class="primary">決勝戦をはじめる</button>
+    <button id="startFinal" class="primary" type="button" onclick="startFinal()">決勝戦をはじめる</button>
   </div>
 </section>
 
@@ -170,7 +168,7 @@ header{text-align:center;margin-bottom:22px}
     <div class="result-actions">
       <button id="shareX" class="primary">Xで結果をシェア</button>
       <button id="copyResult" class="secondary">結果をテキストでコピー</button>
-      <button id="retry" class="secondary">もう一度やる</button>
+      <button id="retry" class="secondary" type="button" onclick="startNewGame()">もう一度やる</button>
     </div>
   </div>
 </section>
@@ -180,7 +178,6 @@ const members = [
   {group:"BTS",name:"RM",image:"images/rm.jpg"},
   {group:"BTS",name:"Jin",image:"images/jin.jpg"},
   {group:"BTS",name:"SUGA",image:"images/suga.jpg"},
-
   {group:"BTS",name:"j-hope",image:"images/jhope.jpg"},
   {group:"BTS",name:"Jimin",image:"images/jimin.jpg"},
   {group:"BTS",name:"V",image:"images/v.jpg"},
@@ -374,7 +371,7 @@ function finishPrelimGroup(){
     return;
   }
 
-  participants=shuffle(prelimSelected);
+  participants=uniqueMembers(shuffle(prelimSelected));
   $("candidateCount").textContent=participants.length;
   $("candidateGrid").innerHTML=participants.map(m=>`
     <div class="candidate">
@@ -652,47 +649,57 @@ function renderResult(){
       <div><div class="member-name">${m.name}</div><div class="result-meta">${m.group}　｜　本選 ${wins.get(m.name)||0}勝　決勝 ${finalWins.get(m.name)||0}勝</div></div>
     </div>`;
   }).join("");
-  try{localStorage.setItem("hybeSukigaoTop9",JSON.stringify(resultRanking));}catch(e){}
+  try{
+    localStorage.setItem("hybeSukigaoTop9",JSON.stringify(resultRanking.map(m=>m.name)));
+  }catch(e){}
+}
+
+function startNewGame(){
+  try{localStorage.removeItem("hybeSukigaoTop9");}catch(e){}
+  resultRanking=[];
+  stateHistory=[];
+  prelimGroups=[];
+  prelimIndex=0;
+  prelimSelected=[];
+  participants=[];
+  wins=new Map();
+  finalists=[];
+  finalWins=new Map();
+  finalMatches=[];
+  finalIndex=0;
+  updateSavedResultButton();
+  show("prelimIntroScreen");
+}
+
+function loadSavedResult(){
+  try{
+    const saved=JSON.parse(localStorage.getItem("hybeSukigaoTop9")||"null");
+    if(!Array.isArray(saved)||saved.length===0) return null;
+    const restored=saved.map(name=>members.find(m=>m.name===name)).filter(Boolean);
+    return restored.length===9 ? restored : null;
+  }catch(e){
+    return null;
+  }
+}
+
+function viewSavedResult(){
+  const saved=loadSavedResult();
+  if(!saved){ alert("保存された結果がありません。"); return; }
+  resultRanking=saved;
+  renderResult();
+  show("resultScreen");
+}
+
+function updateSavedResultButton(){
+  const saved=loadSavedResult();
+  $("viewResultButton").style.display=saved ? "block" : "none";
 }
 
 function resultText(){
-  return "HYBE所属 ナムドル\nわたしの好きな顔 TOP9\n\n"+
-    resultRanking.map((m,i)=>`${i+1}位　${m.name}（${m.group}）`).join("\n");
+  return "HYBE所属 ナムドル\\nわたしの好きな顔 TOP9\\n\\n"+
+    resultRanking.map((m,i)=>`${i+1}位　${m.name}（${m.group}）`).join("\\n");
 }
 
-function bindUI(){
-  $("startButton").onclick=()=>show("prelimIntroScreen");
-  $("startPrelim").onclick=startPreliminary;
-  $("toMain").onclick=()=>{
-    $("mainIntroTitle").textContent="本選 ROUND 1";
-    $("startMainRound").textContent="ROUND 1をはじめる";
-    show("mainIntroScreen");
-  };
-  $("startMainRound").onclick=startMain;
-  $("startFinal").onclick=startFinal;
-  $("retry").onclick=()=>{
-    stateHistory=[];
-    show("prelimIntroScreen");
-  };
-  $("copyResult").onclick=async()=>{
-    try{await navigator.clipboard.writeText(resultText());alert("結果をコピーしました！");}
-    catch(e){alert("コピーできませんでした。");}
-  };
-  $("shareX").onclick=()=>{
-    const url="https://twitter.com/intent/tweet?text="+encodeURIComponent(resultText()+"\n\n#HYBEナムドル好き顔TOP9");
-    window.open(url,"_blank");
-  };
-  $("backButton").onclick=()=>{
-    if(!stateHistory.length)return;
-    restoreState(stateHistory.pop());
-  };
-}
-
-if(document.readyState === "loading"){
-  document.addEventListener("DOMContentLoaded",bindUI);
-}else{
-  bindUI();
-}
 </script>
 </body>
 </html>
