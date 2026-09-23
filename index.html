@@ -83,7 +83,7 @@ header{text-align:center;margin-bottom:22px}
   <div class="hero">
     <h1>HYBE所属 ナムドル<br>わたしの好きな顔 TOP9</h1>
     <p class="subtitle">HYBE所属男性アイドル57人の中から、<br>あなたの「好きな顔」TOP9を決めよう。</p>
-    <button id="startButton" class="primary">START</button>
+    <button id="startButton" class="primary" type="button">START</button>
     <p class="note">本サイト内における画像は著作権法第32条における「引用の目的正当な範囲」に則り使用しています。</p>
   </div>
 </section>
@@ -129,7 +129,8 @@ header{text-align:center;margin-bottom:22px}
     <h2 id="mainIntroTitle">本選 ROUND 1</h2>
     <p>ここからは、予選のグループ分けをいったん忘れて、候補同士をランダムに2人ずつ比較します。</p>
     <p>表示された2人のうち、<strong>より好きな顔を1回タップするだけ</strong>。選んだ瞬間に次の対戦へ進みます。</p>
-    <p>本選は公平に比較できるよう、参加人数を偶数に調整してからスタートします。</p><p>ROUND 1〜3の<strong>勝利数をすべて蓄積</strong>し、3ROUND終了後に決勝進出者を決めます。</p>
+    <p>本選は公平に比較できるよう、参加人数を偶数に調整してからスタートします。</p>
+    <p>ROUND 1〜3の<strong>勝利数をすべて蓄積</strong>し、3ROUND終了後に決勝進出者を決めます。</p>
     <button id="startMainRound" class="primary">ROUND 1をはじめる</button>
   </div>
 </section>
@@ -139,7 +140,6 @@ header{text-align:center;margin-bottom:22px}
     <h2>決勝戦</h2>
     <p>本選を勝ち抜いた決勝候補を、最後にもう一度2択で比較します。</p>
     <p>より好きな顔をタップすると、すぐ次の対戦へ進みます。</p>
-
     <p>決勝の勝利数も加味して、あなたの<strong>好きな顔TOP9</strong>を決定します。</p>
     <button id="startFinal" class="primary">決勝戦をはじめる</button>
   </div>
@@ -180,6 +180,7 @@ const members = [
   {group:"BTS",name:"RM",image:"images/rm.jpg"},
   {group:"BTS",name:"Jin",image:"images/jin.jpg"},
   {group:"BTS",name:"SUGA",image:"images/suga.jpg"},
+
   {group:"BTS",name:"j-hope",image:"images/jhope.jpg"},
   {group:"BTS",name:"Jimin",image:"images/jimin.jpg"},
   {group:"BTS",name:"V",image:"images/v.jpg"},
@@ -280,6 +281,7 @@ function cloneState(){
     finalIndex,
     resultRanking:[...resultRanking]
   };
+}
 
 function restoreState(s){
   stage=s.stage;
@@ -654,36 +656,43 @@ function renderResult(){
 }
 
 function resultText(){
-  return "HYBE所属 ナムドル\\nわたしの好きな顔 TOP9\\n\\n"+
-    resultRanking.map((m,i)=>`${i+1}位　${m.name}（${m.group}）`).join("\\n");
+  return "HYBE所属 ナムドル\nわたしの好きな顔 TOP9\n\n"+
+    resultRanking.map((m,i)=>`${i+1}位　${m.name}（${m.group}）`).join("\n");
 }
 
-$("startButton").onclick=()=>show("prelimIntroScreen");
-$("startPrelim").onclick=startPreliminary;
-$("toMain").onclick=()=>{
-  $("mainIntroTitle").textContent="本選 ROUND 1";
-  $("startMainRound").textContent="ROUND 1をはじめる";
-  show("mainIntroScreen");
-};
-$("startMainRound").onclick=startMain;
-$("startFinal").onclick=startFinal;
-$("retry").onclick=()=>{
-  stateHistory=[];
-  show("prelimIntroScreen");
-};
-$("copyResult").onclick=async()=>{
-  try{await navigator.clipboard.writeText(resultText());alert("結果をコピーしました！");}
-  catch(e){alert("コピーできませんでした。");}
-};
-$("shareX").onclick=()=>{
-  const url="https://twitter.com/intent/tweet?text="+encodeURIComponent(resultText()+"\\n\\n#HYBEナムドル好き顔TOP9");
-  window.open(url,"_blank");
-};
+function bindUI(){
+  $("startButton").onclick=()=>show("prelimIntroScreen");
+  $("startPrelim").onclick=startPreliminary;
+  $("toMain").onclick=()=>{
+    $("mainIntroTitle").textContent="本選 ROUND 1";
+    $("startMainRound").textContent="ROUND 1をはじめる";
+    show("mainIntroScreen");
+  };
+  $("startMainRound").onclick=startMain;
+  $("startFinal").onclick=startFinal;
+  $("retry").onclick=()=>{
+    stateHistory=[];
+    show("prelimIntroScreen");
+  };
+  $("copyResult").onclick=async()=>{
+    try{await navigator.clipboard.writeText(resultText());alert("結果をコピーしました！");}
+    catch(e){alert("コピーできませんでした。");}
+  };
+  $("shareX").onclick=()=>{
+    const url="https://twitter.com/intent/tweet?text="+encodeURIComponent(resultText()+"\n\n#HYBEナムドル好き顔TOP9");
+    window.open(url,"_blank");
+  };
+  $("backButton").onclick=()=>{
+    if(!stateHistory.length)return;
+    restoreState(stateHistory.pop());
+  };
+}
 
-$("backButton").onclick=()=>{
-  if(!stateHistory.length)return;
-  restoreState(stateHistory.pop());
-};
+if(document.readyState === "loading"){
+  document.addEventListener("DOMContentLoaded",bindUI);
+}else{
+  bindUI();
+}
 </script>
 </body>
 </html>
