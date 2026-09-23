@@ -27,10 +27,14 @@ button{font:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transp
 .hero{width:min(100%,680px);padding:32px 20px}
 h1{font-size:clamp(29px,7vw,48px);line-height:1.35;letter-spacing:.03em;margin:0 0 18px}
 .subtitle{line-height:1.9;color:var(--sub);margin:0 0 30px}
-.primary,.secondary{border-radius:999px;padding:14px 28px;cursor:pointer;transition:.2s}
+.primary,.secondary,.text-button{border-radius:999px;padding:14px 28px;cursor:pointer;transition:.2s}
 .primary{border:0;background:var(--accent);color:#fff}
-.secondary{border:1px solid var(--line);background:#fff;color:var(--text)}
-.primary:hover,.secondary:hover{transform:translateY(-1px)}
+.secondary,.text-button{border:1px solid var(--line);background:#fff;color:var(--text)}
+.text-button{display:block;margin:12px auto 0;text-decoration:none}
+.hero .primary,.hero .top-result-button{display:block;width:min(100%,260px);margin-left:auto;margin-right:auto}
+.hero .top-result-button{margin-top:12px}
+.primary:hover,.secondary:hover,.text-button:hover{transform:translateY(-1px)}
+
 .explain{width:min(100%,680px);background:#fff;border:1px solid var(--line);border-radius:24px;padding:30px 24px;text-align:center}
 .explain h2{margin:0 0 18px;font-size:28px}
 .explain p{line-height:1.9;color:#555}
@@ -63,14 +67,18 @@ header{text-align:center;margin-bottom:22px}
 .member-card .group{margin-top:10px}
 .member-card .member-name{font-size:17px}
 .result-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:18px 0}
-.result-card{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-width:0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:6px 6px 9px;text-align:center}
-.result-rank{font-size:17px;font-weight:700;line-height:1.2;margin-bottom:4px}
-.result-card img{display:block;width:100%;aspect-ratio:1/1;border-radius:10px;object-fit:cover}
+.result-card{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-width:0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 8px 14px;text-align:center;min-height:250px}
+.result-rank{font-size:18px;font-weight:700;line-height:1.2;min-height:30px;display:flex;align-items:center;justify-content:center;margin-bottom:7px}
+.result-card img{display:block;width:100%;aspect-ratio:4/5;border-radius:10px;object-fit:cover}
 .result-card .member-name{font-size:13px;line-height:1.25;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .result-meta{font-size:10px;color:var(--sub);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .prelim-next-wrap{display:flex;justify-content:center;margin-top:16px;position:relative;z-index:10}
 .prelim-next-wrap button{position:relative;z-index:11;pointer-events:auto;touch-action:manipulation;-webkit-appearance:none;appearance:none}
-.result-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:24px}
+.result-actions{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;margin-top:24px}
+.result-actions button{width:min(100%,300px);background:#fff;color:var(--text);border:1px solid var(--line);border-radius:999px;padding:14px 24px;cursor:pointer;touch-action:manipulation;-webkit-appearance:none;appearance:none}
+.result-actions #shareX{background:var(--accent);color:#fff;border-color:var(--accent)}
+.result-actions button:hover{transform:translateY(-1px)}
+.x-logo{display:inline-flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;line-height:1;margin-right:6px}
 .note{font-size:10px;color:#999;line-height:1.7;margin-top:28px}
 @media(min-width:650px){
   .prelim-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
@@ -89,7 +97,7 @@ header{text-align:center;margin-bottom:22px}
     <h1>HYBE所属 ナムドル<br>わたしの好きな顔 TOP9</h1>
     <p class="subtitle">HYBE所属男性アイドル57人の中から、<br>あなたの「好きな顔」TOP9を決めよう。</p>
     <button id="startButton" class="primary" type="button" onclick="show('prelimIntroScreen')">START</button>
-    <button id="viewResultButton" class="text-button" type="button" onclick="viewSavedResult()" style="display:none">前回の結果を見る</button>
+    <button id="viewResultButton" class="secondary top-result-button" type="button" onclick="viewSavedResult()" style="display:none">前回の結果を見る</button>
     <button id="aboutButton" class="text-button" type="button" onclick="show('aboutScreen')">本サイトについて</button>
   </div>
 </section>
@@ -157,7 +165,7 @@ header{text-align:center;margin-bottom:22px}
     <p>本選を勝ち抜いた決勝候補を、最後にもう一度2択で比較します。</p>
     <p>より好きな顔をタップすると、すぐ次の対戦へ進みます。</p>
     <p>決勝の勝利数も加味して、あなたの<strong>好きな顔TOP9</strong>を決定します。</p>
-    <button id="startFinal" class="primary" type="button" onclick="startFinal()">決勝戦をはじめる</button>
+    <button id="startFinal" class="primary" type="button" onclick="startFinal()">決勝戦へ進む</button>
   </div>
 </section>
 
@@ -185,7 +193,7 @@ header{text-align:center;margin-bottom:22px}
     </header>
     <div id="resultList" class="result-list"></div>
     <div class="result-actions">
-      <button id="shareX" class="primary" type="button" onclick="shareResult()">結果をXでシェアする</button>
+      <button id="shareX" class="primary" type="button" onclick="shareResult()">結果を<strong>𝕏</strong>でシェアする</button>
       <button id="copyResult" class="secondary" type="button" onclick="copyResult()">結果をテキストとしてコピー</button>
       <button id="retry" class="secondary" type="button" onclick="startNewGame()">もう一度やる</button>
     </div>
