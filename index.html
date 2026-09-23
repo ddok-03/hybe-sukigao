@@ -140,7 +140,7 @@ header{text-align:center;margin-bottom:22px}
     <p>本選を勝ち抜いた決勝候補を、最後にもう一度2択で比較します。</p>
     <p>より好きな顔をタップすると、すぐ次の対戦へ進みます。</p>
 
-          <p>決勝の勝利数も加味して、あなたの<strong>好きな顔TOP9</strong>を決定します。</p>
+    <p>決勝の勝利数も加味して、あなたの<strong>好きな顔TOP9</strong>を決定します。</p>
     <button id="startFinal" class="primary">決勝戦をはじめる</button>
   </div>
 </section>
@@ -281,7 +281,7 @@ function cloneState(){
     resultRanking:[...resultRanking]
   };
 
-    function restoreState(s){
+function restoreState(s){
   stage=s.stage;
   prelimGroups=s.prelimGroups.map(g=>[...g]);
   prelimIndex=s.prelimIndex;
@@ -459,7 +459,7 @@ function openEvenAdjustment(){
   show("adjustScreen");
 }
 
-    function startMainRound(){
+function startMainRound(){
   stage=mainRound+1;
   roundIndex=0;
   roundWins=0;
