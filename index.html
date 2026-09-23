@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HYBE所属 ナムドル｜わたしの好きな顔 TOP9</title>
+<title>HYBE所属 ナムドル｜わたしの好き顔 TOP9</title>
 <style>
 :root{
   --bg:#FEF9FB;
@@ -94,8 +94,8 @@ header{text-align:center;margin-bottom:22px}
 
 <section id="startScreen" class="screen center-screen active">
   <div class="hero">
-    <h1>HYBE所属 ナムドル<br>わたしの好きな顔 TOP9</h1>
-    <p class="subtitle">HYBE所属男性アイドル64人の中から、<br>あなたの「好きな顔」TOP9を決めよう。</p>
+    <h1>HYBE所属 ナムドル<br>わたしの好き顔 TOP9</h1>
+    <p class="subtitle">HYBE所属男性アイドルグループ64人の中から、<br>あなたの「好き顔」TOP9を決めよう。</p>
     <button id="startButton" class="primary" type="button" onclick="show('prelimIntroScreen')">START</button>
     <button id="viewResultButton" class="secondary top-result-button" type="button" onclick="viewSavedResult()" style="display:none">前回の結果を見る</button>
     <button id="aboutButton" class="text-button" type="button" onclick="show('aboutScreen')">本サイトについて</button>
@@ -188,7 +188,7 @@ header{text-align:center;margin-bottom:22px}
   <div class="container">
     <header>
       <div class="stage-name">RESULT</div>
-      <div class="stage-title">あなたの好きな顔 TOP9</div>
+      <div class="stage-title">あなたの好き顔 TOP9</div>
     </header>
     <div id="resultList" class="result-list"></div>
     <div class="result-actions">
@@ -761,7 +761,7 @@ function renderFinal(){
   $("stageName").textContent="決勝戦";
   $("stageTitle").textContent="より好きな顔を選んでください";
   $("progress").textContent=`${finalIndex+1} / ${finalMatches.length}`;
-  $("gameHint").textContent="好きな方をタップすると、すぐ次の対戦へ進みます。";
+  $("gameHint").textContent="好きな方をタップすると、つぎの対戦へ進みます。";
   $("gameContent").innerHTML=`<div class="duel">${duelCard(pair[0],0)}${duelCard(pair[1],1)}</div>`;
   $("duel0").onclick=()=>chooseFinal(pair[0]);
   $("duel1").onclick=()=>chooseFinal(pair[1]);
@@ -862,7 +862,7 @@ const SITE_URL="https://ddok-03.github.io/hybe-sukigao/";
 
 function resultText(){
   return "HYBE所属 ナムドル\n"+
-    "わたしの好きな顔 TOP9\n\n"+
+    "わたしの好き顔 TOP9\n\n"+
     resultRanking.map((m,i)=>`${i+1}位 ${m.name}`).join("\n")+
     "\n\n"+SITE_URL+
     "\n\n#HYBEナムドル好き顔TOP9";
